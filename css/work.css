@@ -1,0 +1,1058 @@
+/* ┌─────────────────────────────────────────┐
+   │ 共通                        │
+   └─────────────────────────────────────────┘ */
+
+/* 全体の共通ルール */
+body {
+  width: 100%;
+  font-family: "Yu Gothic", sans-serif;
+  margin: 0 auto;
+}
+
+:root {
+  /* ▼ ここで「var(--sidebar-width)」を一括管理！ */
+  --sidebar-width: 36rem;
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ header      画面の切り替え後の赤い画面     │
+   └─────────────────────────────────────────┘ */
+
+/* header共通クラス ⇀ロゴとハンバーガーメニュー*/
+#header_area {
+  width: 100%;
+}
+
+/* 画面切り替え（ハンバーガーメニュー）時  背景赤いページ  */
+.nav_red {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  background-color: #ff0000;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
+}
+
+.logo {
+  padding: 1.5rem 0 0rem 0.6rem;
+
+  width: 12rem;
+  margin: 1.5rem 0 0 2rem;
+}
+
+/* 画面切り替え（ハンバーガーメニュー）時  背景赤いページ 表示 */
+.nav_red.open {
+  opacity: 1;
+  visibility: visible;
+  background-color: #ff0000;
+}
+
+/* 画面切り替え（ハンバーガーメニューによって）時　ロゴ */
+.logo_red {
+  margin-top: 4rem;
+  margin-left: 5rem;
+  width: 12rem;
+  height: auto;
+}
+
+.nav_links {
+  display: block;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 3rem;
+  text-align: center;
+  font-size: 3rem;
+}
+
+.red_link {
+  color: white;
+  text-decoration: none;
+}
+
+/* 画面聞切り替え（ハンバーガーメニューによって）時　ロゴ */
+.red_request {
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ ハンバーガーメニュー                        │
+   └─────────────────────────────────────────┘ */
+
+/* ハンバーガーメニュー */
+.hamburger_menu {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  width: 10rem;
+  height: 10rem;
+  cursor: pointer;
+  z-index: 1000;
+  background-color: #ff2a2a;
+}
+
+.bar {
+  position: absolute;
+  transition: 0.3s;
+  left: 1.5rem;
+  height: 0.6rem;
+  width: 7rem;
+  background: white;
+}
+
+.bar:nth-child(1) {
+  top: 2.5rem;
+}
+.bar:nth-child(2) {
+  top: 4.7rem;
+}
+.bar:nth-child(3) {
+  top: 6.9rem;
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ ハンバーガーメニュークリック時の動作       │
+   └─────────────────────────────────────────┘ */
+
+/* ハンバーガーメニューがおされたら、「×」にする */
+.hamburger_menu.open .bar:nth-child(1) {
+  transform: rotate(45deg);
+  top: 4.7rem;
+}
+.hamburger_menu.open .bar:nth-child(2) {
+  opacity: 0;
+}
+.hamburger_menu.open .bar:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 4.7rem;
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ main      メインビジュアル スライドショー    │
+   └─────────────────────────────────────────┘ */
+
+.main_visual {
+  width: 100%;
+  padding-left: var(--sidebar-width);
+}
+/* 外枠（コンテナ）の設定 */
+.bg_image {
+  width: 100%;
+  height: 72rem;
+
+  position: relative;
+  overflow: visible;
+
+  /* ▼ここを「0.5rem」から「0.1rem」に変更！ */
+  border: 1rem solid #fff;
+  box-sizing: border-box; /* 枠線をサイズに含める（レイアウト崩れ防止） */
+}
+
+/* 内側のぼかし（オーバーレイ）の設定 */
+.bg_image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72rem;
+
+  /* ▼修正2：ここは「影（ぼかし）」だけにする */
+  /* 数字を調整して「淡さ」を決める（0rem 0rem 5rem 2rem くらいが程よい） */
+  box-shadow: inset 0rem 0rem 2rem 2rem #fff;
+
+  z-index: 10;
+  pointer-events: none;
+}
+
+.slide {
+  width: 100%;
+  height: 72rem;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  background-size: cover; /* 要素いっぱいに広げる */
+  background-position: center; /* 中央基準で表示 */
+}
+
+.slide1 {
+  animation: slideshow 15s infinite;
+  background-image: url("../img/mainvisual1.jpg");
+  animation-delay: 0s;
+}
+
+.slide2 {
+  animation: slideshow 15s infinite;
+  background-image: url("../img/mainvisual2.jpg");
+  background-size: cover; /* 要素いっぱいに広げる */
+  background-position: center; /* 中央基準で表示 */
+  animation-delay: 5s;
+}
+
+.slide3 {
+  animation: slideshow 15s infinite;
+  background-image: url("../img/mainvisual3.jpg");
+  background-size: cover; /* 要素いっぱいに広げる */
+  background-position: center; /* 中央基準で表示 */
+  animation-delay: 10s;
+}
+
+@keyframes slideshow {
+  0% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 1;
+  }
+  38% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 「話して学ぼう!」画像から左に文字コンテンツ */
+.slide_content {
+  position: absolute;
+  bottom: 15rem;
+  left: -20rem;
+  color: rgb(15, 15, 15);
+  display: flex;
+  flex-direction: column;
+  gap: 3.3rem;
+  justify-content: flex-start;
+  z-index: 15; /* ぼかしの下に配置 */
+}
+
+.slide_title {
+  font-size: 4.6rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-shadow: 0 4px 6px #fff;
+}
+
+.slide_btn {
+  display: block;
+  height: 6.1rem;
+  border-radius: 1rem;
+  text-align: center;
+  font-size: 2.4rem;
+  line-height: 6.1rem;
+
+  color: white;
+  background-color: #ff2a2a;
+  border-bottom: 0.6rem solid #9a0413;
+
+  z-index: 15; /* ぼかしの下に配置 */
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ セクション　 BBBが選ばれる理由　　          │
+   └─────────────────────────────────────────┘ */
+/* BBBが選ばれる理由 */
+#reason_h2 {
+  text-align: center;
+  margin-bottom: 4rem;
+  font-size: 3.6rem;
+  font-weight: bold;
+  position: relative;
+}
+
+/* BBBが選ばれる理由の下線装飾 */
+#reason_h2::after {
+  content: "";
+  width: 10%;
+  margin: 0 auto;
+  border: 0.3rem solid black;
+  position: absolute;
+  bottom: -1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.reason_bg {
+  height: 60rem;
+  width: 100%;
+  background-color: #ff2a2a;
+  margin-top: 8rem;
+  margin-bottom: 3rem;
+  padding-top: 12rem;
+  overflow: hidden;
+}
+
+/* フレックス フェードインをする要素上下の親要素  フィードインされる要素自体*/
+.reason_card {
+  display: flex; /* 画像とテキストを横並びにする */
+  height: 20rem;
+  align-items: center; /* 上下中央揃え */
+  justify-content: center; /* ★centerからflex-startに変更 */
+  background: #fff; /* 背景を白くする */
+  padding: 3rem;
+
+  width: 50%; /* カードの幅 */
+  opacity: 0; /* JSで表示するまで隠す */
+  transition: all 0.5s ease-out;
+}
+
+/* ...existing code... */
+.img_pc,
+.img_teacher {
+  display: block;
+  height: 6rem;
+  width: 8.7rem;
+  margin-right: 2rem;
+  object-fit: contain;
+}
+
+.reason_card strong {
+  display: block;
+  color: #ff2a2a;
+  font-weight: bold;
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.reason_card p {
+  display: block;
+  font-size: 1.8rem;
+}
+
+.reason_card--left {
+  border-radius: 0 2rem 2rem 0;
+  margin-bottom: 3rem;
+  transform: translateX(-100%); /* ★左に隠す */
+}
+
+.reason_card--right {
+  border-radius: 2rem 0 0 2rem;
+  margin-left: auto;
+  transform: translateX(100%); /* ★右に隠す */
+}
+
+/* ★画面内に入った時のアニメーション */
+.reason_card.is-visible {
+  opacity: 1;
+  /* 元の位置に戻る */
+  transform: translateX(0);
+  /* アニメーションの時間や動き方 */
+  transition: all 0.5s ease-out;
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ 受講生の声 白い背景 フレックスで３人分の吹き出し                   │
+   └─────────────────────────────────────────┘ */
+
+.margin_space {
+  width: 100%;
+  margin-top: 15rem;
+}
+
+/* 背景・フレックスで３人分の吹き出し  */
+.voice_bg {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 12rem 20rem 0;
+
+  display: flex;
+
+  flex-direction: column;
+  gap: 10.3rem;
+  margin-bottom: 20rem;
+}
+
+.voice_card {
+  display: flex;
+  justify-content: flex-start;
+  gap: 4.6rem;
+  opacity: 0; /* JSで表示するまで隠す */
+}
+
+.voice_text {
+  width: 46.8rem;
+  line-height: 2.7rem;
+  color: #333333;
+  background-color: #e9f1fb; /* 吹き出しの色 */
+  padding: 2rem;
+  font-size: 1.6rem;
+  border-radius: 1.5rem;
+  position: relative;
+}
+
+/* 吹き出しの三角形（左側） */
+.voice_text::before {
+  content: "";
+  position: absolute;
+  bottom: 2rem;
+  left: -1.8rem;
+  width: 0;
+  height: 0;
+  border-top: 2rem solid transparent;
+  border-bottom: 2rem solid transparent;
+  border-right: 2rem solid #e9f1fb;
+}
+
+.img_voice {
+  display: block;
+  width: 12rem;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 50%;
+  flex-shrink: 0; /* フレックスアイテムが縮小しないようにする */
+  background-color: #ddd; /* 白シルエット用の背景 */
+}
+
+.right_speech {
+  flex-direction: row-reverse;
+}
+
+/* 右寄せの吹き出し：三角形の位置と向きを上書き */
+.right_speech .voice_text::before {
+  /* 位置を左から右へ */
+  left: auto;
+  right: -1.5rem;
+
+  /* 三角形の向きを右向きにする */
+  border-right: none; /* 右向きの三角形を消す */
+  border-left: 1.5rem solid #e9f1fb;
+}
+
+/* 画面内に入った時 */
+.voice_card.is-visible {
+  animation: balloon 0.5s ease-out forwards;
+}
+
+/* 背景から突然現れるDOMが出力されるアニメーション */
+@keyframes balloon {
+  0% {
+    transform: scale(0.1); /* ★最初は小さく */
+    opacity: 0; /* ★透明 */
+  }
+  100% {
+    transform: scale(1); /* ★元のサイズに */
+    opacity: 1; /* ★表示 */
+  }
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ スクールの概要　中心に四枚のcard　背景　赤い水玉│
+   └─────────────────────────────────────────┘ */
+#school_overview {
+  width: 100%;
+  padding: 5rem 0 10rem 0;
+  /* 赤い水玉背景（radial-gradientで作る） */
+  background-image: url("../img/bg.gif");
+  background-size: 75rem 75rem; /* ✅ 固定サイズ */
+  background-repeat: repeat; /* ✅ 繰り返し */
+
+  margin-bottom: 10rem;
+
+  /* シャボン玉が動くアニメーション */
+  animation: fall 10s infinite linear;
+}
+
+@keyframes fall {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -70rem 70rem;
+  }
+}
+
+.margin_space_school {
+  margin-bottom: 10rem;
+}
+
+/* 水玉背景の親要素 */
+.overview_bg {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap; /* 4枚を折り返す */
+  justify-content: center;
+  gap: 6rem;
+  width: 100%;
+
+  padding: 10rem 27rem;
+}
+
+/* 4枚のカード */
+.overview_card {
+  background-color: #ffffff;
+  width: calc(45% - 1.5rem); /* 2カラム想定 */
+  padding: 4rem;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 2rem;
+}
+
+.overview_title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.overview_title_en {
+  font-size: 1.4rem;
+  color: #ff2a2a;
+  margin-bottom: 2rem;
+  font-weight: normal;
+}
+
+.overview_text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  text-align: left;
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ まずは無料で、BBBの英会話を試してみませんか？　最後のCTA(行動喚起)ボタン    │
+   └─────────────────────────────────────────┘ */
+
+.cta_bg {
+  width: 100%;
+  background-color: #ffffff;
+  height: 41.6rem;
+  margin: 0 auto; /* 確認 */
+}
+
+.cta_title {
+  width: 100%;
+  font-size: 3.2rem;
+  font-weight: bold;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta_text {
+  width: 100%;
+  font-size: 1.8rem;
+  margin: 0.1em auto 4rem auto;
+  text-align: center;
+}
+
+.cta_button {
+  display: block;
+  width: 86rem;
+  height: 6.6rem;
+  margin: 0 auto;
+  background-color: #ff2a2a;
+  color: white;
+  font-size: 2.8rem;
+  font-weight: bold;
+  line-height: 6.6rem;
+  text-align: center;
+  border-radius: 3rem;
+}
+
+/* ┌─────────────────────────────────────────┐
+   │ フッター　　　　　                        │
+   └─────────────────────────────────────────┘ */
+
+#footer_area {
+  width: 100%;
+  background-color: #e8e8e8;
+  color: #333333;
+  height: 30rem;
+}
+
+/* 4列に分けるflexbox */
+.footer_link_container {
+  display: flex;
+  justify-content: center;
+  gap: 14.6rem;
+  padding: 6.2rem 0;
+}
+
+.footer_link_title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.footer_text {
+  color: #000;
+  font-size: 1.6rem;
+  text-decoration: none;
+  margin-bottom: 0.8rem;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #666666;
+  padding-bottom: 2rem;
+  background-color: #e8e8e8;
+}
+
+@media screen and (max-width: 900px) {
+  /* ┌─────────────────────────────────────────┐
+   │ ハンバーガーメニュー                        │
+   └─────────────────────────────────────────┘ */
+
+  /* ハンバーガーメニュー */
+  .hamburger_menu {
+    position: fixed;
+    top: 0rem;
+    right: 0rem;
+    width: 7.5rem;
+    height: 7.5rem;
+    cursor: pointer;
+    z-index: 1000;
+    background-color: #ff2a2a;
+  }
+
+  .bar {
+    position: absolute;
+    transition: 0.3s;
+    left: 1rem;
+    height: 0.4rem;
+    width: 6rem;
+    background: white;
+  }
+
+  .bar:nth-child(1) {
+    top: 1.8rem;
+  }
+  .bar:nth-child(2) {
+    top: 4rem;
+  }
+  .bar:nth-child(3) {
+    top: 6.2rem;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ ハンバーガーメニュークリック時の動作       │
+   └─────────────────────────────────────────┘ */
+
+  /* ハンバーガーメニューがおされたら、「×」にする */
+  .hamburger_menu.open .bar:nth-child(1) {
+    transform: rotate(45deg);
+    top: 4.7rem;
+  }
+  .hamburger_menu.open .bar:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger_menu.open .bar:nth-child(3) {
+    transform: rotate(-45deg);
+    top: 4.7rem;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ main      メインビジュアル スライドショー    │
+   └─────────────────────────────────────────┘ */
+
+  /* メインビジュアル全体の余白調整 */
+  .main_visual {
+    width: 100%;
+    padding-left: 0rem;
+    height: 60rem;
+    margin: bottom 10rem;
+  }
+  /* 外枠（コンテナ）の設定 */
+  .bg_image {
+    width: 100%;
+    height: 30rem;
+
+    position: relative;
+    overflow: visible;
+
+    /* ▼ここを「0.5rem」から「0.1rem」に変更！ */
+    border: 1rem solid #fff;
+    box-sizing: border-box; /* 枠線をサイズに含める（レイアウト崩れ防止） */
+  }
+
+  /* 内側のぼかし（オーバーレイ）の設定 */
+  .bg_image::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30rem;
+    /* ▼修正2：ここは「影（ぼかし）」だけにする */
+    /* 数字を調整して「淡さ」を決める（0rem 0rem 5rem 2rem くらいが程よい） */
+    box-shadow: inset 0rem 0rem 2rem 2rem #fff;
+
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  /* スライド画像の高さと透明度設定 */
+  .slide {
+    width: 100%;
+    height: 30rem;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    background-size: cover; /* 要素いっぱいに広げる */
+    background-position: center; /* 中央基準で表示 */
+  }
+
+  /* 1枚目のスライド設定 */
+  .slide1 {
+    animation: slideshow 15s infinite;
+    background-image: url("../img/mainvisual1.jpg");
+    animation-delay: 0s;
+  }
+
+  /* 2枚目のスライド設定 */
+  .slide2 {
+    animation: slideshow 15s infinite;
+    background-image: url("../img/mainvisual2.jpg");
+    background-size: cover; /* 要素いっぱいに広げる */
+    background-position: center; /* 中央基準で表示 */
+    animation-delay: 5s;
+  }
+
+  /* 3枚目のスライド設定 */
+  .slide3 {
+    animation: slideshow 15s infinite;
+    background-image: url("../img/mainvisual3.jpg");
+    background-size: cover; /* 要素いっぱいに広げる */
+    background-position: center; /* 中央基準で表示 */
+    animation-delay: 10s;
+  }
+
+  /* スライド画像コンテナの高さ調整 */
+  .bg_image {
+    width: 100%;
+    height: 30rem;
+
+    position: relative;
+    overflow: visible;
+
+    /* ▼ここを「0.5rem」から「0.1rem」に変更！ */
+    border: 1rem solid #fff;
+    box-sizing: border-box; /* 枠線をサイズに含める（レイアウト崩れ防止） */
+  }
+
+  /* 「話して学ぼう!」画像から左に文字コンテンツ */
+  .slide_content {
+    width: 100%;
+    position: absolute;
+    bottom: -20rem;
+    left: 0rem;
+    color: rgb(15, 15, 15);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    justify-content: flex-start;
+    z-index: 15; /* ぼかしの下に配置 */
+  }
+
+  /* スライドショーのタイトル文字調整 */
+  .slide_title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    text-shadow: 0 4px 6px #fff;
+  }
+
+  /* 無料体験ボタンの幅と位置調整 */
+  .slide_btn {
+    display: block;
+    width: 100%;
+    height: 6.1rem;
+    border-radius: 1rem;
+    text-align: center;
+    font-size: 2.4rem;
+    line-height: 6.1rem;
+
+    color: white;
+    background-color: #ff2a2a;
+    border-bottom: 0.6rem solid #9a0413;
+
+    z-index: 15; /* ぼかしの下に配置 */
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ セクション　 BBBが選ばれる理由　　          │
+   └─────────────────────────────────────────┘ */
+  /* BBBが選ばれる理由 */
+  #reason_h2 {
+    text-align: center;
+    margin-bottom: 4rem;
+    font-size: 3.6rem;
+    font-weight: bold;
+    position: relative;
+  }
+
+  /* BBBが選ばれる理由のタイトルの　下線　*/
+  #reason_h2::after {
+    content: "";
+    width: 30%;
+    margin: 0 auto;
+    border: 0.3rem solid black;
+    position: absolute;
+    bottom: -1.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* 理由セクションの背景エリア設定 */
+  .reason_bg {
+    height: 35.8rem;
+    width: 100%;
+    background-color: #ff2a2a;
+    margin-top: 8rem;
+    margin-bottom: 3rem;
+    padding-top: 3rem;
+    overflow: hidden;
+  }
+
+  /* フレックス フェードインをする要素上下の親要素*/
+  .reason_card {
+    display: flex; /* 画像とテキストを横並びにする */
+    height: 12rem;
+    align-items: center; /* 上下中央揃え */
+    justify-content: center; /* ★centerからflex-startに変更 */
+    background: #fff; /* 背景を白くする */
+    padding: 3rem;
+    width: 95%; /* カードの幅 */
+    opacity: 0; /* JSで表示するまで隠す */
+    transition: all 0.5s ease-out;
+  }
+
+  /* ...existing code... */
+  /* 理由カード内のアイコン画像調整 */
+  .img_pc,
+  .img_teacher {
+    display: block;
+    width: 5.7rem;
+    height: 6rem;
+    margin-right: 2rem;
+    object-fit: contain;
+  }
+
+  /* 理由セクションの下部スペース */
+  .reason_item_bottom {
+    width: 100%;
+    padding-bottom: 3rem;
+    background-color: #ff2a2a;
+  }
+
+  /* 理由カード内の強調テキストスタイル */
+  .reason_card strong {
+    display: block;
+    color: #ff2a2a;
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  /* 左側の理由カードの初期位置 */
+  .reason_card--left {
+    border-radius: 0 2rem 2rem 0;
+    margin-bottom: 3rem;
+    transform: translateX(-100%); /* ★左に隠す */
+  }
+
+  /* 右側の理由カードの初期位置 */
+  .reason_card--right {
+    border-radius: 2rem 0 0 2rem;
+    margin-left: auto;
+    transform: translateX(100%); /* ★右に隠す */
+  }
+
+  /* ★画面内に入った時のアニメーション */
+  .reason_card.is-visible {
+    opacity: 1;
+    /* 元の位置に戻る */
+    transform: translateX(0);
+    /* アニメーションの時間や動き方 */
+    transition: all 0.5s ease-out;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ 受講生の声 白い背景 フレックスで３人分の吹き出し                   │
+   └─────────────────────────────────────────┘ */
+
+  /* セクション間の上部余白を設定 */
+  .margin_space {
+    width: 100%;
+    margin-top: 15rem;
+  }
+
+  /* 背景・フレックスで３人分の吹き出し  */
+  .voice_bg {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 5rem 1.6rem 0;
+
+    display: flex;
+
+    flex-direction: column;
+    gap: 10.3rem;
+    margin-bottom: 15rem;
+  }
+
+  /* 声カードを縦並びに変更 */
+  .voice_card {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 3.1rem;
+    opacity: 0; /* JSで表示するまで隠す */
+  }
+
+  /* 吹き出しテキストのデザイン調整 */
+  .voice_text {
+    width: 100%;
+    line-height: 2.7rem;
+    color: #333333;
+    background-color: #e9f1fb; /* 吹き出しの色 */
+    padding: 2rem;
+    font-size: 1.6rem;
+    border-radius: 1.5rem;
+    position: relative;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ スクールの概要　中心に四枚のcard　背景　赤い水玉│
+   └─────────────────────────────────────────┘ */
+  #school_overview {
+    width: 100%;
+    padding: 5rem 0 10rem 0;
+    /* 赤い水玉背景（radial-gradientで作る） */
+    background-image: url("../img/bg.gif");
+    background-size: 60rem 60rem; /* ✅ 固定サイズ */
+    background-repeat: repeat; /* ✅ 繰り返し */
+
+    /* シャボン玉が動くアニメーション */
+    animation: fall 10s infinite linear;
+    margin-bottom: 10rem;
+  }
+
+  .margin_space_school {
+    margin-bottom: 0rem;
+  }
+
+  /* 水玉背景の親要素 */
+  .overview_bg {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6rem;
+    width: 100%;
+
+    padding: 5rem 1.6rem 0;
+  }
+
+  /* 4枚のカード */
+  .overview_card {
+    background-color: #ffffff;
+    width: calc(100% - 1.6rem); /* 2カラム想定 */
+    padding: 4rem;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 2rem;
+  }
+
+  .overview_title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .overview_title_en {
+    font-size: 1.4rem;
+    color: #ff2a2a;
+    margin-bottom: 2rem;
+    font-weight: normal;
+  }
+
+  .overview_text {
+    font-size: 1.6rem;
+    line-height: 1.8;
+    text-align: left;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ まずは無料で、BBBの英会話を試してみませんか？　最後のCTA(行動喚起)ボタン    │
+   └─────────────────────────────────────────┘ */
+  /* CTAエリア全体の余白設定 */
+  #cta_area {
+    width: 100%;
+    padding: 10rem 0rem;
+  }
+
+  /* CTAコンテンツエリアの高さ設定 */
+  .cta_bg {
+    width: 100%;
+    background-color: #ffffff;
+    height: 38.2rem;
+    margin: 0 auto; /* 確認 */
+  }
+
+  /* 無料体験ボタンのデザイン調整 */
+  .cta_button {
+    display: block;
+    width: 100%;
+    height: 6.6rem;
+    margin: 0 auto;
+    background-color: #ff2a2a;
+    color: white;
+    font-size: 2.8rem;
+    font-weight: bold;
+    line-height: 6.6rem;
+    text-align: center;
+    border-radius: 3rem;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ フッター　　　　　                        │
+   └─────────────────────────────────────────┘ */
+
+  /* フッター全体の背景と高さ設定 */
+  #footer_area {
+    width: 100%;
+    background-color: #e8e8e8;
+    color: #333333;
+    padding: 0 4rem;
+    height: auto;
+  }
+
+  /* 4列に分けるflexbox */
+  .footer_link_container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4rem 1rem;
+    padding: 6.2rem 0;
+  }
+
+  /* フッターリンク見出しのスタイル */
+  .footer_link_title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  /* フッターリンク項目のスタイル */
+  .footer_text {
+    color: #000;
+    font-size: 1.6rem;
+    text-decoration: none;
+    margin-bottom: 0.8rem;
+  }
+
+  /* コピーライト表記のスタイル */
+  .copyright {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #666666;
+    padding-bottom: 2rem;
+    background-color: #e8e8e8;
+  }
+}
