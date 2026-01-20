@@ -5,17 +5,111 @@
 }
 
 /* 共通スタイル */
-#gallery_area {
+#gallery {
+  width: var(--contents_main_width);
+  padding: 0 var(--contents_padding);
+  margin: 0 auto;
+  border: 0.5rem solid red;
+}
+body {
+  margin: 0;
+  font-family: "Source Sans Pro", "Yu Gothic", "YuGothic", sans-serif;
+  background-color: #050507;
+}
+
+/* ===============================================
+   ヘッダー (fixed) ロゴ・ハンバーガーメニュー・メニューの一覧
+   =============================================== */
+/* ヘッダー 初期表示はヘッダーは非表示。親でまとめて指定しておく*/
+#header {
+  width: 100%;
+  /* display: none; */
+}
+
+/* 左上のロゴ画像　初期は非表示 */
+.logo {
+  /* fixedはビューポートからのサイズを指定する */
+  position: fixed;
+  left: 3rem;
+  top: 1.5rem;
+}
+
+.logo a {
+}
+
+.logo img {
+}
+
+/* ハンバーガーメニュー 　初期は非表示(親要素で指定) */
+.hamburger {
+  position: fixed;
+  width: 5rem;
+  height: 5rem;
+  right: 3rem;
+  top: 1.5rem;
+
+  border: 0.5rem solid red;
+}
+
+.hamburger_line {
+  /* ゆっくり動作する */
+  position: absolute;
+  transition: 0.3s;
+  right: 0;
+  height: 0.3rem;
+  width: 100%;
+  background: #121212;
+  border: 1px solid #fcf8f8;
+}
+
+.hamburger_line:nth-child(1) {
+  top: 0.5rem;
+}
+.hamburger_line:nth-child(2) {
+  top: 1.3rem;
+}
+.hamburger_line:nth-child(3) {
+  top: 2.1rem;
+}
+
+/* ハンバーガーメニューがおされたら、「×」にする */
+.hamburger.open .hamburger_line:nth-child(1) {
+  transform: rotate(45deg);
+  top: 1.3rem;
+}
+.hamburger.open .hamburger_line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open .hamburger_line:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 1.3rem;
+}
+
+/* メニュー内の一覧 */
+.global_menu {
+}
+
+.global_menu ul {
+}
+
+.global_menu li {
+}
+
+.global_menu a {
+}
+
+/* ===============================================
+   Gallery
+   =============================================== */
+/* 共通スタイル */
+#gallery {
   width: var(--contents_main_width);
   padding: 0 var(--contents_padding);
   margin: 0 auto;
   border: 0.5rem solid red;
 }
 
-/* ┌─────────────────────────────────────────┐
-   │ Gallery  （flex）階段式に画像が左右にならぶ                       │
-   └─────────────────────────────────────────┘ */
-/* ６枚の画像を階段式に並べるhrex */
+/* 6枚の画像を階段式に並べる */
 .gallery_flex {
   display: flex;
   flex-wrap: wrap;

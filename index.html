@@ -3,42 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recipe Diary</title>
+    <title>FA EXHIBITION</title>
     <link rel="stylesheet" href="css/reset.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/work.css" />
   </head>
 
   <body>
-    
-      <main>
-        <!-- ===============================================
+    <!-- ===============================================
+     ヘッダー (fixed) ロゴ・ハンバーガーメニュー・メニューの一覧
+     =============================================== -->
+    <!-- flexでロゴと、ハンバーガーメニューを左右に配置 -->
+    <header id="header">
+      <div class="logo">
+        <a href="#"><img src="img/logo.svg" alt="FA EXHIBITION" /></a>
+      </div>
+      <!-- ハンバーガーメニュー -->
+      <div class="hamburger">
+        <span class="hamburger_line"></span>
+        <span class="hamburger_line"></span>
+        <span class="hamburger_line"></span>
+      </div>
+      <!-- ハンバーガーメニュー内の一覧 
+       ★どうやって、紐づけるとのかハンバーガーメニューと-->
+      <nav class="global_menu">
+        <ul>
+          <li><a href="#">TOP</a></li>
+          <li><a href="#">INFORMATION</a></li>
+          <li><a href="#">GALLERY</a></li>
+          <li><a href="#">ACCESS</a></li>
+          <li><a href="#">CONTACT</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ===============================================
          Gallery  （flex）画像が左右、階段式にならぶ
          =============================================== -->
-        <section id="gallery_area">
-          <!-- 6枚の画像を階段式に並べるhrex -->
-          <ul class="gallery_flex">
-            <li class="gallery_item">
-              <img class="gallery_img" src="img/flower1.jpg" alt="鮮やかな花1" />
-            </li>
-            <li class="gallery_item">
-              <img class="gallery_img" src="img/flower2.jpg" alt="鮮やかな花2" />
-            </li>
-            <li class="gallery_item">
-              <img class="gallery_img" src="img/flower3.jpg" alt="鮮やかな花3" />
-            </li>
-            <li class="gallery_item">
-              <img class="gallery_img" src="img/flower4.jpg" alt="鮮やかな花4" />
-            </li>
-            <li class="gallery_item">
-              <img class="gallery_img" src="img/flower5.jpg" alt="鮮やかな花5" />
-            </li>
-            <li class="gallery_item">
-              <img class="gallery_img" src="img/flower6.jpg" alt="鮮やかな花6" />
-            </li>
-          </ul>
-        </section>
-        </main>
-    </div>
+      <section id="gallery">
+        <!-- 6枚の画像を階段式に並べる -->
+        <ul class="gallery_flex">
+          <li class="gallery_item">
+            <img class="gallery_img" src="img/flower1.jpg" alt="鮮やかな花1" />
+          </li>
+          <li class="gallery_item">
+            <img class="gallery_img" src="img/flower2.jpg" alt="鮮やかな花2" />
+          </li>
+          <li class="gallery_item">
+            <img class="gallery_img" src="img/flower3.jpg" alt="鮮やかな花3" />
+          </li>
+          <li class="gallery_item">
+            <img class="gallery_img" src="img/flower4.jpg" alt="鮮やかな花4" />
+          </li>
+          <li class="gallery_item">
+            <img class="gallery_img" src="img/flower5.jpg" alt="鮮やかな花5" />
+          </li>
+          <li class="gallery_item">
+            <img class="gallery_img" src="img/flower6.jpg" alt="鮮やかな花6" />
+          </li>
+        </ul>
+      </section>
+    </main>
+    <!-- javaScriptファイルの読み込み-->
+    <!-- jQueryの読み込み（work.jsより前） -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/work.js"></script>
   </body>
 </html>
