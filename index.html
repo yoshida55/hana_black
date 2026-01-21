@@ -4,13 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FA EXHIBITION</title>
-    <link rel="stylesheet" href="css/reset.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/work.css" />
   </head>
@@ -37,6 +38,7 @@
           <li><a href="#">TOP</a></li>
           <li><a href="#">INFORMATION</a></li>
           <li><a href="#">GALLERY</a></li>
+          ``
           <li><a href="#">ACCESS</a></li>
           <li><a href="#">CONTACT</a></li>
         </ul>
@@ -44,9 +46,52 @@
     </header>
 
     <main>
-      <section></section>
       <!-- ===============================================
-         Gallery  （flex）画像が左右、階段式にならぶ
+         mainvisual ３つの花の画像あり。スクロールでPC拡大/SP縮小
+         =============================================== -->
+      <section id="mainvisual">
+        <!-- flexで三枚に並べる -->
+        <div class="mainvisual_imgwrapper">
+          <img
+            class="mainvisual_img"
+            src="img/mainvisual1.jpg"
+            alt="鮮やかな花1"
+          />
+          <img
+            class="mainvisual_img"
+            src="img/mainvisual2.jpg"
+            alt="鮮やかな花2"
+          />
+          <img
+            class="mainvisual_img"
+            src="img/mainvisual3.jpg"
+            alt="鮮やかな花3"
+          />
+        </div>
+      </section>
+
+      <!-- ===============================================
+       site-title - 「Hello Flower! FA EXHIBITION 2021
+       =============================================== -->
+      <!-- スクロールした段階でしたからタイトルが上にフェードインする -->
+      <section id="site_title">
+        <h1 class="site_title_content">
+          <p class="site_title_text">Hello Flower! <br />FA EXHIBITION 2021</p>
+        </h1>
+      </section>
+
+      <!-- ===============================================
+       information - (文字)開催日時・場所情報、画面下で下からfadeIn表示 │
+       =============================================== -->
+      <!-- スクロールした段階でしたからタイトルが上にフェードインする -->
+      <section id="information">
+        <h1 class="information_title_content">
+          <p class="information_title_text">INFORMATION</p>
+        </h1>
+      </section>
+
+      <!-- ===============================================
+         Gallery  画像が左右、階段式にならぶ（flexは不使用）
          =============================================== -->
       <section id="gallery">
         <!-- 6枚の画像を階段式に並べる -->
