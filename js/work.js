@@ -78,16 +78,8 @@ $(window).on("scroll", function () {
   }
 });
 
-// ...existing code...
-// スクロールした段階で「Hello Flower! FA EXHIBITION 2021の文字をしたからうかす
-
-$(window).on("scroll", function () {
-  // thisはwindow(ブラウザの表示そのもの)、ージ全体の一番上から、
-  // 「今どれくらい下にスクロールしたか」という距離（ピクセル数） です。
-  const scrollTop = $(this).scrollTop();
-  if (scrollTop > 400) {
-    $("#site-title .site-title_text").addClass("is-show");
-  } else {
-    $("#site-title .site-title_text").removeClass("is-show");
-  }
+// inviewプラグインを読み込んでいる場合
+$(".move_title").on("inview", function () {
+  // その要素が画面内に入った時にだけ実行される
+  $(this).addClass("is-show");
 });

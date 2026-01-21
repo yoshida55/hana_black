@@ -85,41 +85,89 @@
        =============================================== -->
       <!-- スクロールした段階でしたからタイトルが上にフェードインする -->
       <section id="information">
-        <h1 class="information_title_content">
-          <p class="information_title_text">INFORMATION</p>
-        </h1>
+        <h2 class="section_title">
+          <p class="section_title_text move_title">INFORMATION</p>
+        </h2>
+        <div class="information_content move_title">
+          <p class="info_date_en">
+            2021 JUL 1(THU)-3(SAT)<br />DAY1 10am-6pm OTHER 10am-5:30pm
+          </p>
+          <p class="info_location">at PARK SIDE HALL</p>
+          <p class="info_date_jp">
+            2021年7月1日(木)－3日(土)<br />Day1 10時～18時 その他 10時～17時30分
+          </p>
+        </div>
       </section>
 
       <!-- ===============================================
          Gallery  画像が左右、階段式にならぶ（flexは不使用）
          =============================================== -->
       <section id="gallery">
+        <h2 class="section_title">
+          <p class="section_title_text move_title">GALLERY</p>
+        </h2>
         <!-- 6枚の画像を階段式に並べる -->
         <ul class="gallery_flex">
           <li class="gallery_item">
-            <img class="gallery_img" src="img/flower1.jpg" alt="鮮やかな花1" />
+            <img
+              class="gallery_img move_title"
+              src="img/flower1.jpg"
+              alt="鮮やかな花1"
+            />
           </li>
           <li class="gallery_item">
-            <img class="gallery_img" src="img/flower2.jpg" alt="鮮やかな花2" />
+            <img
+              class="gallery_img move_title"
+              src="img/flower2.jpg"
+              alt="鮮やかな花2"
+            />
           </li>
           <li class="gallery_item">
-            <img class="gallery_img" src="img/flower3.jpg" alt="鮮やかな花3" />
+            <img
+              class="gallery_img move_title"
+              src="img/flower3.jpg"
+              alt="鮮やかな花3"
+            />
           </li>
           <li class="gallery_item">
-            <img class="gallery_img" src="img/flower4.jpg" alt="鮮やかな花4" />
+            <img
+              class="gallery_img move_title"
+              src="img/flower4.jpg"
+              alt="鮮やかな花4"
+            />
           </li>
           <li class="gallery_item">
-            <img class="gallery_img" src="img/flower5.jpg" alt="鮮やかな花5" />
+            <img
+              class="gallery_img move_title"
+              src="img/flower5.jpg"
+              alt="鮮やかな花5"
+            />
           </li>
           <li class="gallery_item">
-            <img class="gallery_img" src="img/flower6.jpg" alt="鮮やかな花6" />
+            <img
+              class="gallery_img move_title"
+              src="img/flower6.jpg"
+              alt="鮮やかな花6"
+            />
           </li>
         </ul>
       </section>
+      <!-- ===============================================
+       side-btn - PC右下固定ボタン、GALLERYで表示/ACCESSで非表示 │
+       =============================================== -->
+      <div id="side_btn">
+        <a href="#access" class="for_exhibitor position_exhibitor"
+          >FOR EXHIBITOR</a
+        >
+        <a href="#access" class="for_visitor position_visitor">FOR VISITOR</a>
+      </div>
     </main>
     <!-- javaScriptファイルの読み込み-->
     <!-- jQueryの読み込み（work.jsより前） -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- ↓ このプラグインが必要です ↓ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/protonet-jquery.inview/1.1.2/jquery.inview.min.js"></script>
+
     <script src="js/work.js"></script>
   </body>
 </html>

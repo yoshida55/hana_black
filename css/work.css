@@ -144,6 +144,101 @@ body {
 }
 
 /* ┌─────────────────────────────────────────┐
+   │ site-title - 「Hello Flower! FA EXHIBITION 2021」 │
+   └─────────────────────────────────────────┘ */
+
+/* サイトタイトルのテキスト */
+#site_title .site_title_text {
+  text-align: center;
+  margin: 10rem 0;
+  font-size: 10rem;
+  color: #ffffff;
+
+  opacity: 0; /* 最初は透明 */
+  transform: translateY(9rem); /* 最初は30px下に下げる */
+  transition: all 1s ease; /* 1秒かけてふわっと動く */
+  display: block; /* 必要に応じて */
+}
+
+/* クラスがついた時の状態 */
+#site_title .site_title_text.is-show {
+  opacity: 1; /* 見えるように */
+  transform: translateY(0); /* 元の位置(0)に戻す */
+}
+/* ┌─────────────────────────────────────────┐
+   │ information - (文字)開催日時・場所情報、画面下で下からfadeIn表示 │
+   └─────────────────────────────────────────┘ */
+
+#information {
+  width: 100%;
+  margin-bottom: 15rem;
+}
+
+.section_title {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+/* 共通の下線のはいったタイトルスタイル INFORMATION など*/
+.section_title_text {
+  display: inline-block;
+  position: relative;
+  color: #fff;
+  font-size: 6rem;
+  letter-spacing: 0.25em;
+  padding-bottom: 0.35em; /* 文字と線の間 */
+}
+
+.move_title {
+  opacity: 0; /* 最初は透明 */
+  transform: translateY(12rem);
+  transition: all 1s ease; /* 1秒かけてふわっと動く */
+}
+
+.section_title_text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%; /* 文字幅ピッタリ */
+  height: 2px;
+  background: #fff;
+}
+
+/* クラスがついた時の状態 */
+.move_title.is-show {
+  opacity: 1; /* 見えるように */
+  transform: translateY(0); /* 元の位置(0)に戻す */
+  transition:
+    opacity 1s,
+    transform 1s;
+}
+
+/* INFORMATIONの詳細部分 */
+.information_content {
+  text-align: center;
+  color: #fff;
+}
+
+.info_date_en {
+  font-size: 2.8rem;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.info_location {
+  font-size: 5rem;
+  margin-bottom: 3rem;
+  font-weight: 400;
+}
+
+.info_date_jp {
+  font-size: 1.8rem;
+  line-height: 2;
+  font-weight: 300;
+}
+
+/* ┌─────────────────────────────────────────┐
    │ gallery - 6枚の花画像を左右交互に階段式配置 │
    └─────────────────────────────────────────┘ */
 
@@ -175,64 +270,44 @@ body {
 }
 
 /* ┌─────────────────────────────────────────┐
-   │ site-title - 「Hello Flower! FA EXHIBITION 2021」 │
-   └─────────────────────────────────────────┘ */
-
-/* サイトタイトルのテキスト */
-#site_title .site_title_text {
-  text-align: center;
-  margin: 10rem 0;
-  font-size: 10rem;
-  color: #ffffff;
-
-  opacity: 0; /* 最初は透明 */
-  transform: translateY(9rem); /* 最初は30px下に下げる */
-  transition: all 1s ease; /* 1秒かけてふわっと動く */
-  display: block; /* 必要に応じて */
-}
-
-/* クラスがついた時の状態 */
-#site_title .site_title_text.is-show {
-  opacity: 1; /* 見えるように */
-  transform: translateY(0); /* 元の位置(0)に戻す */
-}
-/* ┌─────────────────────────────────────────┐
-   │ information - (文字)開催日時・場所情報、画面下で下からfadeIn表示 │
-   └─────────────────────────────────────────┘ */
-
-#information {
-  width: 100%;
-  margin-bottom: 15rem;
-}
-
-.information_title_text {
-  font-size: 6rem;
-  text-align: center;
-  color: white;
-
-  position: relative;
-  justify-content: center;
-  margin: 0 auto;
-}
-
-.information_title_content::after {
-  content: "";
-  display: block;
-  width: calc(100% - 80rem);
-  margin: 0 auto;
-  height: 0.2rem;
-  background-color: #ffffff;
-  margin: 1rem auto 0 auto;
-}
-
-/* ┌─────────────────────────────────────────┐
    │ side-btn - （fixed）PC右下固定ボタン、GALLERYで表示/ACCESSで非表示 │
    └─────────────────────────────────────────┘ */
+#side_btn {
+  position: fixed;
 
-/* ┌─────────────────────────────────────────┐
-   │ access - (文字)アクセス情報、背景画像がfixed全画面表示 │
-   └─────────────────────────────────────────┘ */
+  top: 55%; /* 画面の高さ中央に配置 */
+  right: 0; /* 右端に配置 */
 
+  /* 右に90度回転させる */
+  transform: rotate(-90deg);
+  transform-origin: right bottom;
+
+  display: flex;
+  flex-direction: row;
+
+  z-index: 1000;
+}
+
+.for_exhibitor,
+.for_visitor {
+  border: 0.1rem solid #ffffff;
+  background-color: #050507;
+
+  display: block;
+  padding: 1.5rem 2.9rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+
+.position_exhibitor {
+  top: 50rem;
+  right: 0;
+}
+.position_visitor {
+  top: 54rem;
+  right: 0;
+}
 /* ┌─────────────────────────────────────────┐
    │ bg - 　　（花の画像）ACCESS背景、ACCESSでfadeIn/CONTACTでfadeOut │
    └─────────────────────────────────────────┘ */
