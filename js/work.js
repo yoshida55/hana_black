@@ -80,6 +80,31 @@ $(window).on("scroll", function () {
 
 // inviewプラグインを読み込んでいる場合
 $(".move_title").on("inview", function () {
-  // その要素が画面内に入った時にだけ実行される
+  // 入っても出ても、とにかくクラスをつけてしまう
   $(this).addClass("is-show");
+});
+
+//- `出現`: **GALLERYタイトル**が画面に入ったタイミングで、右からスライドして表示。
+// - `消失`: **ACCESSタイトル**が画面に入ったタイミングで、スライドして消える。
+
+// GALLERYが見えたら表示
+$("#gallery").on("inview", function (e, isInView) {
+  // 画面に入った時だけ実行したい処理
+  if (isInView) {
+    $("#side_btn").addClass("is-show");
+  }
+});
+
+$(".access_title").on("inview", function (e, isInView) {
+  if (isInView) {
+    $("#side_btn").removeClass("is-show");
+  }
+});
+
+//access_area
+//ACCESSタイトル**が来たら背景をフェードイン表示、
+$("#access_area").on("inview", function (e, isInView) {
+  if (isInView) {
+    $("#access_area").addClass("is-show");
+  }
 });
