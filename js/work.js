@@ -103,8 +103,14 @@ $(".access_title").on("inview", function (e, isInView) {
 
 //access_area
 //ACCESSタイトル**が来たら背景をフェードイン表示、
-$("#access_area").on("inview", function (e, isInView) {
+$("#access_area, #contact").on("inview", function (e, isInView) {
   if (isInView) {
-    $("#access_area").addClass("is-show");
+    if ($(this).attr("id") === "access_area") {
+      // ACCESSエリアが画面に入ったら、is-showクラスをつけてフェードイン
+      $(this).addClass("is-show");
+    } else if ($(this).attr("id") === "contact") {
+      // CONTACTエリアが見えたら、ACCESSの背景を消す
+      $("#access_area").removeClass("is-show");
+    }
   }
 });
