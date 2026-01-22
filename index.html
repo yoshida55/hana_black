@@ -165,30 +165,35 @@
        bg -（花の画像）、ACCESSでfadeIn/CONTACTでfadeOut │
        =============================================== -->
       <section id="access_area">
+        <!-- アクセス関連をまとめる。Flex。 -->
         <div class="access_content">
+          <!-- 共通タイトル（ACCESS） -->
           <h2 class="section_title">
             <p class="section_title_text">ACCESS</p>
           </h2>
-          <div class="access_content">
-            <p class="access_hall">PARK SIDE HALL</p>
-            <address class="access_address">
-              〒152-0035 東京都目黒区自由が丘1-1-1 PARK SIDE HALL<br />
-              PARK SIDE HALL, 1-1-1 Jiyugaoka, Meguro-ku, Tokyo
-            </address>
-            <div class="access_contact">
-              <p>Tel: 03-1111-1111</p>
-              <p>E-mail: info@xxxxxxx.jp</p>
-            </div>
-            <div class="access_map_link">
-              <a href="#" class="btn_google_map">GOOGLE MAP</a>
-            </div>
+          <!-- 施設名 -->
+          <p class="access_hall">PARK SIDE HALL</p>
+          <!-- 本社住所 -->
+          <address class="access_address">
+            〒152-0035 東京都目黒区自由が丘1-1-1 PARK SIDE HALL<br />
+            PARK SIDE HALL, 1-1-1 Jiyugaoka, Meguro-ku, Tokyo
+          </address>
+          <!-- 電話番号、メールアドレス -->
+          <div class="access_contact">
+            <p>Tel: 03-1111-1111</p>
+            <p>E-mail: info@xxxxxxx.jp</p>
+          </div>
+          <!-- Google Mapへのリンクボタン -->
+          <div class="access_map_link">
+            <a href="#" class="btn_google_map">GOOGLE MAP</a>
           </div>
         </div>
       </section>
+      <div class="bg"></div>
       <!-- ===============================================
        contact - お問い合わせボタン2つ、疑似要素で矢印表示 │
        =============================================== -->
-      <section class="contact_area">
+      <section id="contact_area">
         <!-- 共通のタイトル -->
         <h2 class="section_title">
           <div class="section_title_text">CONTACT</div>
@@ -204,7 +209,41 @@
       <!-- ===============================================
        footer - フッター情報、左右flexboxで両端配置 │
        =============================================== -->
-      <section></section>
+      <footer id="footer">
+        <!-- 先頭のライン -->
+        <div class="footer_line"></div>
+        <div class="footer_padding">
+          <!-- アクセス関連 -->
+          <div class="footer_access">
+            <p class="footer_brand">FA EXHIBITION</p>
+            <address class="footer_address_text">
+              〒152-0035 東京都目黒区自由が丘1-1-1 PARK SIDE HALL<br />
+              Tel: 03-1111-1111<br />
+              E-mail: info@xxxxxxx.jp
+            </address>
+          </div>
+          <!-- 左右にSNSアイコン、コピーライトを配置するフレックスボックス -->
+          <div class="footer_sns_copyright">
+            <!-- 各種SNSアイコンを並べるフレックスボックス -->
+            <ul class="footer_sns_container">
+              <li>
+                <a href="#">Twitter</a>
+              </li>
+              <li>
+                <a href="#">Facebook</a>
+              </li>
+              <li>
+                <a href="#">Instagram</a>
+              </li>
+            </ul>
+            <!-- コピーライトを左右にフレックスボックス -->
+            <div class="footer_copyright_container">
+              <p class="footer_policy">PRIVACY POLICY</p>
+              <p class="footer_copyright">© FA EXHIBITION</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
     <!-- javaScriptファイルの読み込み-->
     <!-- jQueryの読み込み（work.jsより前） -->

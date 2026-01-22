@@ -62,22 +62,6 @@ $(window).on("scroll", function () {
   }
 });
 
-// スクロールした段階で「Hello Flower! FA EXHIBITION 2021の文字をしたからうかす
-
-// ...existing code...
-// スクロールした段階で「Hello Flower! FA EXHIBITION 2021の文字をしたからうかす
-
-$(window).on("scroll", function () {
-  // thisはwindow(ブラウザの表示そのもの)、ージ全体の一番上から、
-  // 「今どれくらい下にスクロールしたか」という距離（ピクセル数） です。
-  const scrollTop = $(this).scrollTop();
-  if (scrollTop > 200) {
-    $("#site_title .site_title_text").addClass("is-show");
-  } else {
-    $("#site_title .site_title_text").removeClass("is-show");
-  }
-});
-
 // inviewプラグインを読み込んでいる場合
 $(".move_title").on("inview", function () {
   // 入っても出ても、とにかくクラスをつけてしまう
@@ -88,29 +72,44 @@ $(".move_title").on("inview", function () {
 // - `消失`: **ACCESSタイトル**が画面に入ったタイミングで、スライドして消える。
 
 // GALLERYが見えたら表示
-$("#gallery").on("inview", function (e, isInView) {
-  // 画面に入った時だけ実行したい処理
+// $("#gallery").on("inview", function (e, isInView) {
+//   if (isInView) {
+//     $("#side_btn").addClass("is-show");
+//   } else {
+//     // 画面から外れた（上にスクロールして戻った）ら非表示にする
+//     $("#side_btn").removeClass("is-show");
+//   }
+// });
+function updateSideBtn() {
+  const st = $(window).scrollTop();
+  const gTop = $("#gallery").offset().top;
+  const aTop = $("#access_area").offset().top;
+  const p = st + 100; // 100px余裕
+
+  if (p >= gTop && p < aTop) $("#side_btn").addClass("is-show");
+  else $("#side_btn").removeClass("is-show");
+}
+$(window).on("load scroll resize", updateSideBtn);
+
+// ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+
+// ACCESS inview → 表示/非表示制御
+$(".access_content .section_title").on("inview", function (e, isInView) {
   if (isInView) {
-    $("#side_btn").addClass("is-show");
+    $(".bg").fadeIn(500);
+  } else {
+    $(".bg").fadeOut(500);
   }
 });
 
-$(".access_title").on("inview", function (e, isInView) {
-  if (isInView) {
-    $("#side_btn").removeClass("is-show");
-  }
-});
-
-//access_area
-//ACCESSタイトル**が来たら背景をフェードイン表示、
-$("#access_area, #contact").on("inview", function (e, isInView) {
-  if (isInView) {
-    if ($(this).attr("id") === "access_area") {
-      // ACCESSエリアが画面に入ったら、is-showクラスをつけてフェードイン
-      $(this).addClass("is-show");
-    } else if ($(this).attr("id") === "contact") {
-      // CONTACTエリアが見えたら、ACCESSの背景を消す
-      $("#access_area").removeClass("is-show");
-    }
-  }
-});
+//お問い合わせボタンをホバー時に矢印を動かす
+$(".contact_msg").hover(
+  function () {
+    // マウスが乗ったとき
+    $(this).addClass("hover");
+  },
+  function () {
+    // マウスが離れたとき
+    $(this).removeClass("hover");
+  },
+);

@@ -10,7 +10,7 @@
 #gallery {
   width: var(--contents_main_width);
   padding: 0 var(--contents_padding);
-  margin: 0 auto 30rem;
+  margin-bottom: 60rem;
 }
 body {
   margin: 0;
@@ -184,9 +184,8 @@ body {
   display: inline-block;
   position: relative;
   color: #fff;
-  font-size: 6rem;
-  letter-spacing: 0.25em;
-  padding-bottom: 0.35em; /* 文字と線の間 */
+  font-size: 5rem;
+  font-weight: 350;
 }
 
 .move_title {
@@ -241,10 +240,12 @@ body {
 /* ┌─────────────────────────────────────────┐
    │ gallery - 6枚の花画像を左右交互に階段式配置 │
    └─────────────────────────────────────────┘ */
-
-/* 6枚の画像を階段式に並べる */
-.gallery_flex {
-  width: 100%;
+#gallery {
+  width: var(--contents_main_width);
+  margin: 0 auto;
+  padding: 0 var(--contents_padding);
+  margin-bottom: 60rem;
+  border: 0.5rem solid red;
 }
 
 /* イメージの親クラス ただ下に余白だけをつくっている*/
@@ -282,16 +283,18 @@ body {
   transform: rotate(-90deg);
   transform-origin: right bottom;
 
+  right: -100px; /* 最初は画面の外（右側）に追い出しておく */
+  transition: right 0.5s ease; /* 動きをスムーズにする */
+  /* その他、見た目の設定 */
+
   display: flex;
   flex-direction: row;
 
   z-index: 1000;
-  opacity: 0;
-  margin-bottom: 20rem;
 }
 
 #side_btn.is-show {
-  opacity: 1;
+  right: 0; /* 画面内にスライドイン */
 }
 
 .for_visitor,
@@ -319,32 +322,85 @@ body {
    └─────────────────────────────────────────┘ */
 #access_area {
   width: 100%;
-  height: 100vh;
-  background-image: url("../img/bg.jpg");
-  background-size: cover;
-  background-position: center;
-
-  opacity: 0;
-  transition: opacity 1s ease;
 
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 50rem;
 }
 
 #access_area.is-show {
   opacity: 1;
 }
 
+.bg {
+  background: url("../img/bg.jpg") center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  display: none;
+}
+
+.white_space {
+  width: 100%;
+  height: 50rem;
+}
+
+/* アクセス関連をまとめる。Flex。 */
 .access_content {
   width: 100%;
   text-align: center;
   color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* アクセスタイトル */
+/* 共通クラスを以下のようにしてセクションタイトルだけ書き換える。 */
+.access_content .section_title {
+  margin-bottom: 5rem;
+}
+
+/* PARK SIDE HALL */
+.access_hall {
+  font-size: 4rem;
+  margin-bottom: 3rem;
+  font-weight: 400;
+}
+
+.access_address {
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.access_contact {
+  font-size: 1.5rem;
+  margin-bottom: 5rem;
+  font-weight: 300;
+}
+
+.btn_google_map {
+  display: inline-block;
+  padding: 1.5rem 4rem;
+  border: 0.1rem solid white;
+  color: white;
+  text-decoration: none;
 }
 
 /* ┌─────────────────────────────────────────┐
    │ contact - お問い合わせボタン2つ、疑似要素で矢印表示 │
    └─────────────────────────────────────────┘ */
+#contact_area {
+  width: 100%;
+  margin-bottom: 20rem;
+}
+
 .contact_containar {
   display: flex;
   flex-direction: column;
@@ -354,13 +410,15 @@ body {
 
 .contact_msg {
   display: inline-block;
-  padding: 2rem 4rem;
+  padding: 4rem 10rem;
   border: 0.1rem solid white;
   color: white;
   text-align: center;
   position: relative;
+  font-size: 2rem;
 }
 
+/* 矢印の横棒部分 */
 .contact_msg::after {
   content: "";
   position: absolute;
@@ -385,6 +443,55 @@ body {
   /* 垂直中央に配置しつつ、45度回転させて「く」の形にする */
   transform: translateY(-50%) rotate(45deg);
 }
+
+/* 矢印を右にずらす  */
+.contact_msg:hover::after,
+.contact_msg:hover::before {
+  right: -5rem;
+  /* 時間をかけて動かす */
+  transition: right 0.3s ease;
+}
 /* ┌─────────────────────────────────────────┐
    │ footer - フッター情報、左右flexboxで両端配置 │
    └─────────────────────────────────────────┘ */
+#footer {
+  width: 100%;
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 5rem;
+}
+
+.footer_padding {
+  padding: 0 5rem;
+}
+
+.footer_line {
+  border: 1px solid white;
+  margin-bottom: 5rem;
+}
+
+.footer_access {
+  margin-bottom: 3rem;
+}
+
+.footer_sns_copyright {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer_sns_container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.footer_sns_container a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer_copyright_container {
+  display: flex;
+  gap: 2rem;
+}
