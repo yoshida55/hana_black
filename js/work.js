@@ -9,9 +9,7 @@ $(window).on("scroll", function () {
   } else {
     $("#header").fadeOut();
   }
-  // else句を削除 → fadeOutしない
 });
-console.log("aaaaa");
 
 // ハンバーガーメニューをクリックした際に、
 // ハンバーガーメニューを開閉する処理を追加する。
@@ -22,45 +20,61 @@ $(".hamburger").on("click", function () {
   $(this).toggleClass("open");
 });
 
-// メインビジュアル画像のスクロール連動拡大・縮小
-$(window).on("scroll", function () {
-  const scrollTop = $(this).scrollTop();
+// ========================================
+// メインビジュアルの拡大・縮小処理
+// ========================================
+let ticking = false;
 
-  // PC表示（900px以上）: スクロールで拡大
-  if (window.innerWidth >= 900) {
-    // 初期33% → スクロール500pxで40%まで拡大
-    const newWidth = 33 + (scrollTop / 500) * 7; // 最大40%
-    const maxWidth = 40;
-    $(".mainvisual_img").css("width", Math.min(newWidth, maxWidth) + "%");
-  }
-  // SP表示（900px未満）: スクロールで縮小
-  else {
-    // 初期100% → スクロール300pxで70%まで縮小
-    const newWidth = 100 - (scrollTop / 300) * 30; // 最小70%
-    const minWidth = 70;
-    $(".mainvisual_img").css("width", Math.max(newWidth, minWidth) + "%");
+$(window).on("scroll resize load", function () {
+  if (ticking) return;
+  ticking = true;
+
+  requestAnimationFrame(() => {
+    const scrollTop = $(window).scrollTop();
+    const vh = window.innerHeight; // 100vh
+    const progress = Math.min(scrollTop / vh, 1); // 0〜1
+
+    if (window.innerWidth >= 900) {
+      // ========== PC: 33% → 100% (左右は0%に) ==========
+      // 左画像: 33% → 0%
+      const leftWidth = 33.333 * (1 - progress);
+      // 中央画像: 33% → 100%
+      const centerWidth = 33.333 + (100 - 33.333) * progress;
+      // 右画像: 33% → 0%
+      const rightWidth = 33.333 * (1 - progress);
+
+      $(".mainvisual_img:nth-child(1)").css("width", leftWidth + "%");
+      $(".mainvisual_img:nth-child(2)").css("width", centerWidth + "%");
+      $(".mainvisual_img:nth-child(3)").css("width", rightWidth + "%");
+    } else {
+      // ========== SP: 100% → 33% (左右は0%→33%) ==========
+      // 左画像: 0% → 33%
+      const leftWidth = 33.333 * progress;
+      // 中央画像: 100% → 33%
+      const centerWidth = 100 - (100 - 33.333) * progress;
+      // 右画像: 0% → 33%
+      const rightWidth = 33.333 * progress;
+
+      $(".mainvisual_img:nth-child(1)").css("width", leftWidth + "%");
+      $(".mainvisual_img:nth-child(2)").css("width", centerWidth + "%");
+      $(".mainvisual_img:nth-child(3)").css("width", rightWidth + "%");
+    }
+
+    ticking = false;
+  });
+});
+
+// ------------------------------------------------------
+// サイトタイトルを表示する　下から上に移動したときにフェードインする
+$(window).on("scroll load", function () {
+  if ($(this).scrollTop() > 100) {
+    $("#site_title .site_title_text").addClass("is-show");
+  } else {
+    $("#site_title .site_title_text").removeClass("is-show");
   }
 });
 
-// メインビジュアル画像のスクロール連動拡大・縮小
-$(window).on("scroll", function () {
-  const scrollTop = $(this).scrollTop();
-
-  // PC表示（900px以上）: スクロールで拡大
-  if (window.innerWidth >= 900) {
-    // 初期33% → スクロール500pxで40%まで拡大
-    const newWidth = 33 + (scrollTop / 500) * 30; // 最大40%
-    const maxWidth = 70;
-    $(".mainvisual_img").css("width", Math.min(newWidth, maxWidth) + "%");
-  }
-  // SP表示（900px未満）: スクロールで縮小
-  else {
-    // 初期100% → スクロール300pxで70%まで縮小
-    const newWidth = 100 - (scrollTop / 300) * 30; // 最小70%
-    const minWidth = 70;
-    $(".mainvisual_img").css("width", Math.max(newWidth, minWidth) + "%");
-  }
-});
+// --------------------------------------------------------
 
 // inviewプラグインを読み込んでいる場合
 $(".move_title").on("inview", function () {

@@ -138,9 +138,24 @@ body {
   align-items: center;
 }
 .mainvisual_img {
-  width: 33%;
+  width: 33.333%;
   height: 100vh;
-  transition: transform 0.5s ease;
+  object-fit: cover;
+  transition: width 0.2s linear;
+  will-change: width;
+}
+
+/* SP用の初期表示（中央100%、左右0%） */
+@media (max-width: 900px) {
+  .mainvisual_img:nth-child(1) {
+    width: 0%;
+  }
+  .mainvisual_img:nth-child(2) {
+    width: 100%;
+  }
+  .mainvisual_img:nth-child(3) {
+    width: 0%;
+  }
 }
 
 /* ┌─────────────────────────────────────────┐
@@ -245,7 +260,6 @@ body {
   margin: 0 auto;
   padding: 0 var(--contents_padding);
   margin-bottom: 60rem;
-  border: 0.5rem solid red;
 }
 
 /* イメージの親クラス ただ下に余白だけをつくっている*/
@@ -494,4 +508,522 @@ body {
 .footer_copyright_container {
   display: flex;
   gap: 2rem;
+}
+
+/* メディアクエリを900px以下に */
+@media screen and (max-width: 900px) {
+  /* ┌─────────────────────────────────────────┐
+   │ 定数定義・共通設定                      │
+   └─────────────────────────────────────────┘ */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  :root {
+    --contents_padding: 3rem;
+    --contents_main_width: 100%;
+    --contents_max_width: 80rem; /* 最大幅として保持 */
+  }
+
+  /* 共通スタイル */
+  #gallery,
+  #information,
+  #access_area,
+  #contact_area,
+  #footer {
+    width: var(--contents_main_width);
+    padding: 0 var(--contents_padding);
+  }
+  body {
+    margin: 0 auto;
+    font-family: "Source Sans Pro", "Yu Gothic", "YuGothic", sans-serif;
+    background-color: #050507;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ header - 左上ロゴ＋右上ハンバーガー、520pxスクロールでfadeIn表示 │
+   └─────────────────────────────────────────┘ */
+  /* ヘッダー 初期表示はヘッダーは非表示。親でまとめて指定しておく*/
+  #header {
+    width: 100%;
+    /* display: none; */
+  }
+
+  /* 左上のロゴ画像　初期は非表示 */
+  .logo {
+    /* fixedはビューポートからのサイズを指定する */
+    position: fixed;
+    left: 3rem;
+    top: 1.5rem;
+  }
+
+  /* ハンバーガーメニュー 　初期は非表示(親要素で指定) */
+  .hamburger {
+    position: fixed;
+    width: 5rem;
+    height: 5rem;
+    right: 3rem;
+    top: 1.5rem;
+
+    z-index: 400;
+  }
+
+  .hamburger_line {
+    /* ゆっくり動作する */
+    position: absolute;
+    transition: 0.3s;
+    right: 0;
+    height: 0.3rem;
+    width: 100%;
+    background: #121212;
+    border: 1px solid #fcf8f8;
+  }
+
+  .hamburger_line:nth-child(1) {
+    top: 0.5rem;
+  }
+  .hamburger_line:nth-child(2) {
+    top: 1.3rem;
+  }
+  .hamburger_line:nth-child(3) {
+    top: 2.1rem;
+  }
+
+  /* ハンバーガーメニューがおされたら、「×」にする */
+  .hamburger.open .hamburger_line:nth-child(1) {
+    transform: rotate(45deg);
+    top: 1.3rem;
+  }
+  .hamburger.open .hamburger_line:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.open .hamburger_line:nth-child(3) {
+    transform: rotate(-45deg);
+    top: 1.3rem;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ navi - 別画面　ハンバーガー押下時へスライド表示 　│
+   └─────────────────────────────────────────┘ */
+  /* 最初非表示・ハンバーガーメニュー押下時
+   に上からスライド表示 */
+  /* ここにopenのクラスがついたときに開く */
+  .global_menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* メニューが増えたとき対応できるため　固定にはしない */
+    height: auto;
+    /* とりあえずdebugで白 */
+    background: #050507;
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .global_menu.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .global_menu ul {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .global_menu li {
+  }
+
+  .global_menu a {
+    color: #ffffff;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ mainvisual - 3つの花画像を横並び、スクロールでPC拡大/SP縮小 │
+   └─────────────────────────────────────────┘ */
+
+  #mainvisual {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .mainvisual_imgwrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .mainvisual_img {
+    width: 33%;
+    height: 100vh;
+    transition: all 0.1s ease;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ site-title - 「Hello Flower! FA EXHIBITION 2021」 │
+   └─────────────────────────────────────────┘ */
+
+  /* サイトタイトルのテキスト */
+  #site_title .site_title_text {
+    text-align: center;
+    margin: 10rem 0;
+    font-size: 4.8rem;
+    color: #ffffff;
+
+    opacity: 0; /* 最初は透明 */
+    transform: translateY(9rem); /* 最初は30px下に下げる */
+    transition: all 0.5s ease; /* 1sから0.5sへ短縮 */
+    display: block; /* 必要に応じて */
+  }
+
+  /* クラスがついた時の状態 */
+  #site_title .site_title_text.is-show {
+    opacity: 1; /* 見えるように */
+    transform: translateY(0); /* 元の位置(0)に戻す */
+  }
+  /* ┌─────────────────────────────────────────┐
+   │ information - (文字)開催日時・場所情報、画面下で下からfadeIn表示 │
+   └─────────────────────────────────────────┘ */
+
+  #information {
+    width: 100%;
+    margin-bottom: 15rem;
+  }
+
+  .section_title {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  /* 共通の下線のはいったタイトルスタイル INFORMATION など*/
+  .section_title_text {
+    display: inline-block;
+    position: relative;
+    color: #fff;
+    font-size: 5rem;
+    font-weight: 350;
+  }
+
+  .move_title {
+    opacity: 0; /* 最初は透明 */
+    transform: translateY(12rem);
+    transition: all 1s ease; /* 1秒かけてふわっと動く */
+  }
+
+  .section_title_text::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%; /* 文字幅ピッタリ */
+    height: 0.1px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  /* クラスがついた時の状態 */
+  .move_title.is-show {
+    opacity: 1; /* 見えるように */
+    transform: translateY(0); /* 元の位置(0)に戻す */
+    transition:
+      opacity 1s,
+      transform 1s;
+  }
+
+  /* INFORMATIONの詳細部分 */
+  .information_content {
+    text-align: center;
+    color: #fff;
+  }
+
+  .info_date_en {
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  .info_location {
+    font-size: 5rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+
+  .info_date_jp {
+    font-size: 1.8rem;
+    line-height: 2;
+    font-weight: 300;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ gallery - 6枚の花画像を左右交互に階段式配置 │
+   └─────────────────────────────────────────┘ */
+  #gallery {
+    width: 100%;
+    margin-bottom: 60rem;
+  }
+
+  /* イメージの親クラス ただ下に余白だけをつくっている*/
+  .gallery_item {
+    margin-bottom: 6rem;
+    width: 100%;
+    height: auto;
+  }
+  .gallery_flex {
+    width: 100%;
+  }
+
+  /* 階段上のそれぞれの下の余白　 */
+  .gallery_item:nth-child(odd) {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* 階段上のそれぞれの下の余白 */
+  .gallery_item:nth-child(even) {
+    text-align: center;
+  }
+
+  /* 画像のそれぞれのサイズ。 */
+  .gallery_img {
+    width: 100%;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ side-btn - （fixed）PC右下固定ボタン、GALLERYで表示/ACCESSで非表示 │
+   └─────────────────────────────────────────┘ */
+  #side_btn {
+    position: fixed;
+
+    top: 55%; /* 画面の高さ中央に配置 */
+    right: 0; /* 右端に配置 */
+
+    /* 右に90度回転させる */
+    transform: rotate(-90deg);
+    transform-origin: right bottom;
+
+    right: -100px; /* 最初は画面の外（右側）に追い出しておく */
+    transition: right 0.5s ease; /* 動きをスムーズにする */
+    /* その他、見た目の設定 */
+
+    display: flex;
+    flex-direction: row;
+
+    z-index: 1000;
+  }
+
+  #side_btn.is-show {
+    right: 0; /* 画面内にスライドイン */
+  }
+
+  .for_visitor,
+  .for_exhibitor {
+    border: 0.1rem solid #ffffff;
+    background-color: #050507;
+
+    display: block;
+    padding: 1rem 2.9rem;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.4rem;
+  }
+
+  .position_exhibitor {
+    top: 50rem;
+    right: 0;
+  }
+  .position_visitor {
+    top: 54rem;
+    right: 0;
+  }
+  /* ┌─────────────────────────────────────────┐
+   │ ACCESS背景-（花の画像）、ACCESSでfadeIn/CONTACTでfadeOut │
+   └─────────────────────────────────────────┘ */
+  #access_area {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 50rem;
+  }
+
+  #access_area.is-show {
+    opacity: 1;
+  }
+
+  .bg {
+    background: url("../img/bg.jpg") center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    display: none;
+  }
+
+  .white_space {
+    width: 100%;
+    height: 50rem;
+  }
+
+  /* アクセス関連をまとめる。Flex。 */
+  .access_content {
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* アクセスタイトル */
+  /* 共通クラスを以下のようにしてセクションタイトルだけ書き換える。 */
+  .access_content .section_title {
+    margin-bottom: 5rem;
+  }
+
+  /* PARK SIDE HALL */
+  .access_hall {
+    font-size: 4rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+
+  .access_address {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  .access_contact {
+    font-size: 1.5rem;
+    margin-bottom: 5rem;
+    font-weight: 300;
+  }
+
+  .btn_google_map {
+    display: inline-block;
+    padding: 1.5rem 4rem;
+    border: 0.1rem solid white;
+    color: white;
+    text-decoration: none;
+  }
+
+  /* ┌─────────────────────────────────────────┐
+   │ contact - お問い合わせボタン2つ、疑似要素で矢印表示 │
+   └─────────────────────────────────────────┘ */
+  #contact_area {
+    width: 100%;
+    margin-bottom: 20rem;
+  }
+
+  .contact_containar {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    border: 0.5rem solid red;
+  }
+
+  .contact_msg {
+    display: block;
+    width: 100%;
+    padding: 4rem 0;
+    border: 0.1rem solid white;
+    color: white;
+    text-align: center;
+    position: relative;
+    font-size: 2rem;
+  }
+
+  /* 矢印の横棒部分 */
+  .contact_msg::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -4rem;
+    width: 7rem;
+    height: 1px;
+    background-color: white;
+    /* 文字分上に移動する。 */
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+
+  /* 矢印の「先端（くの字）」部分 */
+  .contact_msg::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -4rem; /* 横棒の先端（右端）に合わせる */
+    width: 1rem; /* 先端のサイズ */
+    height: 1rem; /* 先端のサイズ */
+    border-top: 1px solid white;
+    /* 垂直中央に配置しつつ、45度回転させて「く」の形にする */
+    transform: translateY(-50%) rotate(45deg);
+    opacity: 0;
+  }
+
+  /* 矢印を右にずらす  */
+  .contact_msg:hover::after,
+  .contact_msg:hover::before {
+    right: -5rem;
+    /* 時間をかけて動かす */
+    transition: right 0.3s ease;
+  }
+  /* ┌─────────────────────────────────────────┐
+   │ footer - フッター情報、左右flexboxで両端配置 │
+   └─────────────────────────────────────────┘ */
+  #footer {
+    width: 100%;
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 5rem;
+  }
+
+  .footer_padding {
+    padding: 0 0rem;
+  }
+
+  .footer_line {
+    border: 1px solid white;
+    margin-bottom: 5rem;
+  }
+
+  .footer_access {
+    margin-bottom: 3rem;
+  }
+
+  .footer_sns_copyright {
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .footer_sns_container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .footer_sns_container a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .footer_copyright_container {
+    display: flex;
+    gap: 2rem;
+  }
 }
