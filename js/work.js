@@ -25,10 +25,13 @@ $(".hamburger").on("click", function () {
 // ========================================
 let ticking = false;
 
+// スクロールした瞬間に「今から描画予約するから、他のスクロールイベントは入ってこないで！」
 $(window).on("scroll resize load", function () {
   if (ticking) return;
   ticking = true;
 
+  // ここからここまでは、requestAnimationFrame によって予約された、後で実行される処理ですよ」（組み込み命令）
+  // 次の描画の更新のタイミングで実行してくださいね！！
   requestAnimationFrame(() => {
     const scrollTop = $(window).scrollTop();
     const vh = window.innerHeight; // 100vh
