@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>処理フロー可視化</title>
+    <!-- CODE_HASH: 1086894b53bac83f55d0854c6c75b855 -->
+    <!-- SOURCE_FILE: あああ.php -->
+    <!-- START_LINE: 17 -->
+    <!-- END_LINE: 69 -->
+    <!-- LANGUAGE: flow -->
+    <!-- VISUALIZATION_TYPE: flow -->
+    <!-- CREATED_AT: 2026-01-25T15:17:06.718Z -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background-color: #1E1E1E;
+            color: #CCCCCC;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background-color: #252526;
+            border: 1px solid #3E3E42;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        header {
+            background-color: #2D2D30;
+            padding: 20px;
+            border-bottom: 1px solid #3E3E42;
+        }
+        h1 {
+            color: #4EC9B0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .main-content {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+        .flowchart-section {
+            flex: 1;
+            overflow-x: auto;
+            background-color: #1E1E1E;
+            border: 1px solid #3E3E42;
+            border-radius: 4px;
+            padding: 20px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        .code-section {
+            flex: 1;
+            background-color: #1E1E1E;
+            border: 1px solid #3E3E42;
+            border-radius: 4px;
+            padding: 20px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        .code-section h2 {
+            color: #DCDCAA;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .code-content {
+            background-color: #252526;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .explanation-section {
+            padding: 20px;
+            border-top: 1px solid #3E3E42;
+        }
+        .explanation-section h2 {
+            color: #DCDCAA;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+        .step-item {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #1E1E1E;
+            border-left: 3px solid #4EC9B0;
+            border-radius: 4px;
+        }
+        .step-item::before {
+            content: "ステップ " counter(step-counter);
+            display: block;
+            color: #4EC9B0;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .step-title {
+            color: #DCDCAA;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .step-description {
+            color: #CCCCCC;
+            line-height: 1.6;
+        }
+        svg .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        svg .node:hover .node-shape {
+            filter: brightness(1.3);
+        }
+        svg .node:hover .node-text {
+            font-weight: bold;
+        }
+        .arrow {
+            fill: none;
+            stroke: #858585;
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+        }
+        .arrow-yes {
+            stroke: #4EC9B0;
+        }
+        .arrow-no {
+            stroke: #CE9178;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .modal-content {
+            background-color: #252526;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #3E3E42;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            color: #CCCCCC;
+        }
+        .modal-title {
+            color: #4EC9B0;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .modal-body {
+            line-height: 1.6;
+        }
+        .close {
+            color: #858585;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #CCCCCC;
+        }
+        .keyword { color: #C586C0; }
+        .string { color: #CE9178; }
+        .function { color: #DCDCAA; }
+        .variable { color: #9CDCFE; }
+        .number { color: #B5CEA8; }
+        .comment { color: #6A9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 処理フロー可視化 - お問い合わせフォーム処理</h1>
+        </header>
+        
+        <div class="main-content">
+            <div class="flowchart-section">
+                <svg id="flowchart" width="600" height="2400" viewBox="0 0 600 2400">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#858585" />
+                        </marker>
+                        <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#4EC9B0" />
+                        </marker>
+                        <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#CE9178" />
+                        </marker>
+                    </defs>
+                    
+                    <!-- 開始 -->
+                    <g class="node" data-step="0">
+                        <rect class="node-shape" x="225" y="20" width="150" height="50" rx="25" fill="#4EC9B0" />
+                        <text class="node-text" x="300" y="50" text-anchor="middle" fill="#1E1E1E" font-size="14" font-weight="bold">開始</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="70" x2="300" y2="100" />
+                    
+                    <!-- REQUEST_METHODチェック -->
+                    <g class="node" data-step="1">
+                        <polygon class="node-shape" points="300,100 450,150 300,200 150,150" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="145" text-anchor="middle" fill="#1E1E1E" font-size="13" font-weight="bold">REQUEST_METHOD</text>
+                        <text class="node-text" x="300" y="160" text-anchor="middle" fill="#1E1E1E" font-size="13" font-weight="bold">=== 'POST'?</text>
+                    </g>
+                    <line class="arrow arrow-no" x1="150" y1="150" x2="50" y2="150" marker-end="url(#arrowhead-no)" />
+                    <text x="100" y="140" fill="#CE9178" font-size="12">NO</text>
+                    <line class="arrow arrow-yes" x1="300" y1="200" x2="300" y2="240" marker-end="url(#arrowhead-yes)" />
+                    <text x="310" y="220" fill="#4EC9B0" font-size="12">YES</text>
+                    
+                    <!-- 終了(NO) -->
+                    <g class="node" data-step="end-no">
+                        <rect class="node-shape" x="0" y="230" width="100" height="50" rx="10" fill="#858585" />
+                        <text class="node-text" x="50" y="260" text-anchor="middle" fill="#1E1E1E" font-size="12">処理なし</text>
+                    </g>
+                    
+                    <!-- 入力データ取得 -->
+                    <g class="node" data-step="2">
+                        <rect class="node-shape" x="200" y="240" width="200" height="60" fill="#569CD6" />
+                        <text class="node-text" x="300" y="260" text-anchor="middle" fill="#FFFFFF" font-size="12">入力データ取得</text>
+                        <text class="node-text" x="300" y="275" text-anchor="middle" fill="#FFFFFF" font-size="11">name, email,</text>
+                        <text class="node-text" x="300" y="290" text-anchor="middle" fill="#FFFFFF" font-size="11">message をサニタイズ</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="300" x2="300" y2="330" />
+                    
+                    <!-- nameバリデーション -->
+                    <g class="node" data-step="3">
+                        <polygon class="node-shape" points="300,330 430,370 300,410 170,370" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="365" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">empty($name)</text>
+                        <text class="node-text" x="300" y="380" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">?</text>
+                    </g>
+                    <line class="arrow arrow-yes" x1="430" y1="370" x2="500" y2="370" marker-end="url(#arrowhead-yes)" />
+                    <text x="440" y="360" fill="#4EC9B0" font-size="11">YES</text>
+                    <line class="arrow arrow-no" x1="300" y1="410" x2="300" y2="440" marker-end="url(#arrowhead-no)" />
+                    <text x="310" y="425" fill="#CE9178" font-size="11">NO</text>
+                    
+                    <!-- nameエラー設定 -->
+                    <g class="node" data-step="3a">
+                        <rect class="node-shape" x="450" y="345" width="140" height="50" fill="#CE9178" />
+                        <text class="node-text" x="520" y="365" text-anchor="middle" fill="#1E1E1E" font-size="11">errors['name']</text>
+                        <text class="node-text" x="520" y="380" text-anchor="middle" fill="#1E1E1E" font-size="11">にエラー設定</text>
+                    </g>
+                    <line class="arrow" x1="520" y1="395" x2="520" y2="470" />
+                    <line class="arrow" x1="520" y1="470" x2="380" y2="470" />
+                    
+                    <!-- emailバリデーション（空チェック） -->
+                    <g class="node" data-step="4">
+                        <polygon class="node-shape" points="300,440 430,480 300,520 170,480" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="475" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">empty($email)</text>
+                        <text class="node-text" x="300" y="490" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">?</text>
+                    </g>
+                    <line class="arrow arrow-yes" x1="430" y1="480" x2="500" y2="480" marker-end="url(#arrowhead-yes)" />
+                    <text x="440" y="470" fill="#4EC9B0" font-size="11">YES</text>
+                    <line class="arrow arrow-no" x1="300" y1="520" x2="300" y2="560" marker-end="url(#arrowhead-no)" />
+                    <text x="310" y="540" fill="#CE9178" font-size="11">NO</text>
+                    
+                    <!-- emailエラー設定（空） -->
+                    <g class="node" data-step="4a">
+                        <rect class="node-shape" x="450" y="455" width="140" height="50" fill="#CE9178" />
+                        <text class="node-text" x="520" y="475" text-anchor="middle" fill="#1E1E1E" font-size="11">errors['email']</text>
+                        <text class="node-text" x="520" y="490" text-anchor="middle" fill="#1E1E1E" font-size="11">にエラー設定</text>
+                    </g>
+                    <line class="arrow" x1="520" y1="505" x2="520" y2="630" />
+                    <line class="arrow" x1="520" y1="630" x2="380" y2="630" />
+                    
+                    <!-- emailバリデーション（形式チェック） -->
+                    <g class="node" data-step="5">
+                        <polygon class="node-shape" points="300,560 440,600 300,640 160,600" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="595" text-anchor="middle" fill="#1E1E1E" font-size="11" font-weight="bold">FILTER_VALIDATE_</text>
+                        <text class="node-text" x="300" y="610" text-anchor="middle" fill="#1E1E1E" font-size="11" font-weight="bold">EMAIL OK?</text>
+                    </g>
+                    <line class="arrow arrow-no" x1="440" y1="600" x2="500" y2="600" marker-end="url(#arrowhead-no)" />
+                    <text x="445" y="590" fill="#CE9178" font-size="11">NO</text>
+                    <line class="arrow arrow-yes" x1="300" y1="640" x2="300" y2="680" marker-end="url(#arrowhead-yes)" />
+                    <text x="310" y="660" fill="#4EC9B0" font-size="11">YES</text>
+                    
+                    <!-- emailエラー設定（形式） -->
+                    <g class="node" data-step="5a">
+                        <rect class="node-shape" x="450" y="575" width="140" height="50" fill="#CE9178" />
+                        <text class="node-text" x="520" y="595" text-anchor="middle" fill="#1E1E1E" font-size="11">errors['email']</text>
+                        <text class="node-text" x="520" y="610" text-anchor="middle" fill="#1E1E1E" font-size="11">形式エラー設定</text>
+                    </g>
+                    <line class="arrow" x1="520" y1="625" x2="520" y2="750" />
+                    <line class="arrow" x1="520" y1="750" x2="380" y2="750" />
+                    
+                    <!-- messageバリデーション（空チェック） -->
+                    <g class="node" data-step="6">
+                        <polygon class="node-shape" points="300,680 430,720 300,760 170,720" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="715" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">empty($message)</text>
+                        <text class="node-text" x="300" y="730" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">?</text>
+                    </g>
+                    <line class="arrow arrow-yes" x1="430" y1="720" x2="500" y2="720" marker-end="url(#arrowhead-yes)" />
+                    <text x="440" y="710" fill="#4EC9B0" font-size="11">YES</text>
+                    <line class="arrow arrow-no" x1="300" y1="760" x2="300" y2="800" marker-end="url(#arrowhead-no)" />
+                    <text x="310" y="780" fill="#CE9178" font-size="11">NO</text>
+                    
+                    <!-- messageエラー設定（空） -->
+                    <g class="node" data-step="6a">
+                        <rect class="node-shape" x="450" y="695" width="140" height="50" fill="#CE9178" />
+                        <text class="node-text" x="520" y="715" text-anchor="middle" fill="#1E1E1E" font-size="11">errors['message']</text>
+                        <text class="node-text" x="520" y="730" text-anchor="middle" fill="#1E1E1E" font-size="11">にエラー設定</text>
+                    </g>
+                    <line class="arrow" x1="520" y1="745" x2="520" y2="870" />
+                    <line class="arrow" x1="520" y1="870" x2="380" y2="870" />
+                    
+                    <!-- messageバリデーション（文字数チェック） -->
+                    <g class="node" data-step="7">
+                        <polygon class="node-shape" points="300,800 440,840 300,880 160,840" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="835" text-anchor="middle" fill="#1E1E1E" font-size="11" font-weight="bold">mb_strlen > 500</text>
+                        <text class="node-text" x="300" y="850" text-anchor="middle" fill="#1E1E1E" font-size="11" font-weight="bold">?</text>
+                    </g>
+                    <line class="arrow arrow-yes" x1="440" y1="840" x2="500" y2="840" marker-end="url(#arrowhead-yes)" />
+                    <text x="445" y="830" fill="#4EC9B0" font-size="11">YES</text>
+                    <line class="arrow arrow-no" x1="300" y1="880" x2="300" y2="920" marker-end="url(#arrowhead-no)" />
+                    <text x="310" y="900" fill="#CE9178" font-size="11">NO</text>
+                    
+                    <!-- messageエラー設定（文字数） -->
+                    <g class="node" data-step="7a">
+                        <rect class="node-shape" x="450" y="815" width="140" height="50" fill="#CE9178" />
+                        <text class="node-text" x="520" y="835" text-anchor="middle" fill="#1E1E1E" font-size="11">errors['message']</text>
+                        <text class="node-text" x="520" y="850" text-anchor="middle" fill="#1E1E1E" font-size="11">文字数エラー</text>
+                    </g>
+                    <line class="arrow" x1="520" y1="865" x2="520" y2="990" />
+                    <line class="arrow" x1="520" y1="990" x2="380" y2="990" />
+                    
+                    <!-- エラーチェック -->
+                    <g class="node" data-step="8">
+                        <polygon class="node-shape" points="300,920 430,960 300,1000 170,960" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="955" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">empty($errors)</text>
+                        <text class="node-text" x="300" y="970" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">?</text>
+                    </g>
+                    <line class="arrow arrow-no" x1="170" y1="960" x2="50" y2="960" marker-end="url(#arrowhead-no)" />
+                    <text x="100" y="950" fill="#CE9178" font-size="11">NO</text>
+                    <line class="arrow arrow-yes" x1="300" y1="1000" x2="300" y2="1040" marker-end="url(#arrowhead-yes)" />
+                    <text x="310" y="1020" fill="#4EC9B0" font-size="11">YES</text>
+                    
+                    <!-- 終了(エラーあり) -->
+                    <g class="node" data-step="end-error">
+                        <rect class="node-shape" x="0" y="935" width="100" height="50" rx="10" fill="#858585" />
+                        <text class="node-text" x="50" y="955" text-anchor="middle" fill="#1E1E1E" font-size="11">エラー表示</text>
+                        <text class="node-text" x="50" y="970" text-anchor="middle" fill="#1E1E1E" font-size="11">終了</text>
+                    </g>
+                    
+                    <!-- データ準備 -->
+                    <g class="node" data-step="9">
+                        <rect class="node-shape" x="200" y="1040" width="200" height="70" fill="#569CD6" />
+                        <text class="node-text" x="300" y="1060" text-anchor="middle" fill="#FFFFFF" font-size="12">データ準備</text>
+                        <text class="node-text" x="300" y="1075" text-anchor="middle" fill="#FFFFFF" font-size="11">timestamp, ip_address</text>
+                        <text class="node-text" x="300" y="1090" text-anchor="middle" fill="#FFFFFF" font-size="11">取得、配列作成</text>
+                        <text class="node-text" x="300" y="1105" text-anchor="middle" fill="#FFFFFF" font-size="11">$data = [...]</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="1110" x2="300" y2="1150" />
+                    
+                    <!-- ファイルオープン -->
+                    <g class="node" data-step="10">
+                        <rect class="node-shape" x="180" y="1150" width="240" height="60" fill="#CE9178" stroke="#CE9178" stroke-width="3" />
+                        <rect class="node-shape" x="186" y="1156" width="228" height="48" fill="#CE9178" />
+                        <text class="node-text" x="300" y="1175" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">fopen(DATA_FILE, 'a')</text>
+                        <text class="node-text" x="300" y="1195" text-anchor="middle" fill="#1E1E1E" font-size="11">ファイルを追記モードで開く</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="1210" x2="300" y2="1250" />
+                    
+                    <!-- error_log -->
+                    <g class="node" data-step="11">
+                        <rect class="node-shape" x="180" y="1250" width="240" height="60" fill="#CE9178" stroke="#CE9178" stroke-width="3" />
+                        <rect class="node-shape" x="186" y="1256" width="228" height="48" fill="#CE9178" />
+                        <text class="node-text" x="300" y="1275" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">error_log()</text>
+                        <text class="node-text" x="300" y="1295" text-anchor="middle" fill="#1E1E1E" font-size="11">ログファイルに記録</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="1310" x2="300" y2="1350" />
+                    
+                    <!-- ファイルオープン成功チェック -->
+                    <g class="node" data-step="12">
+                        <polygon class="node-shape" points="300,1350 430,1390 300,1430 170,1390" fill="#DCDCAA" />
+                        <text class="node-text" x="300" y="1385" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">$file が有効</text>
+                        <text class="node-text" x="300" y="1400" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">?</text>
+                    </g>
+                    <line class="arrow arrow-yes" x1="300" y1="1430" x2="300" y2="1470" marker-end="url(#arrowhead-yes)" />
+                    <text x="310" y="1450" fill="#4EC9B0" font-size="11">YES</text>
+                    <line class="arrow arrow-no" x1="430" y1="1390" x2="500" y2="1390" marker-end="url(#arrowhead-no)" />
+                    <text x="440" y="1380" fill="#CE9178" font-size="11">NO</text>
+                    
+                    <!-- システムエラー -->
+                    <g class="node" data-step="12a">
+                        <rect class="node-shape" x="450" y="1365" width="140" height="50" fill="#CE9178" />
+                        <text class="node-text" x="520" y="1385" text-anchor="middle" fill="#1E1E1E" font-size="11">errors['system']</text>
+                        <text class="node-text" x="520" y="1400" text-anchor="middle" fill="#1E1E1E" font-size="11">にエラー設定</text>
+                    </g>
+                    <line class="arrow" x1="520" y1="1415" x2="520" y2="1850" />
+                    <line class="arrow" x1="520" y1="1850" x2="380" y2="1850" />
+                    
+                    <!-- 文字コード変換 -->
+                    <g class="node" data-step="13">
+                        <rect class="node-shape" x="180" y="1470" width="240" height="60" fill="#CE9178" stroke="#CE9178" stroke-width="3" />
+                        <rect class="node-shape" x="186" y="1476" width="228" height="48" fill="#CE9178" />
+                        <text class="node-text" x="300" y="1495" text-anchor="middle" fill="#1E1E1E" font-size="11" font-weight="bold">mb_convert_variables()</text>
+                        <text class="node-text" x="300" y="1515" text-anchor="middle" fill="#1E1E1E" font-size="11">UTF-8 → SJIS-win</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="1530" x2="300" y2="1570" />
+                    
+                    <!-- CSV書き込み -->
+                    <g class="node" data-step="14">
+                        <rect class="node-shape" x="180" y="1570" width="240" height="60" fill="#CE9178" stroke="#CE9178" stroke-width="3" />
+                        <rect class="node-shape" x="186" y="1576" width="228" height="48" fill="#CE9178" />
+                        <text class="node-text" x="300" y="1595" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">fputcsv($file, $data)</text>
+                        <text class="node-text" x="300" y="1615" text-anchor="middle" fill="#1E1E1E" font-size="11">CSV形式で書き込み</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="1630" x2="300" y2="1670" />
+                    
+                    <!-- ファイルクローズ -->
+                    <g class="node" data-step="15">
+                        <rect class="node-shape" x="180" y="1670" width="240" height="60" fill="#CE9178" stroke="#CE9178" stroke-width="3" />
+                        <rect class="node-shape" x="186" y="1676" width="228" height="48" fill="#CE9178" />
+                        <text class="node-text" x="300" y="1695" text-anchor="middle" fill="#1E1E1E" font-size="12" font-weight="bold">fclose($file)</text>
+                        <text class="node-text" x="300" y="1715" text-anchor="middle" fill="#1E1E1E" font-size="11">ファイルを閉じる</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="1730" x2="300" y2="1770" />
+                    
+                    <!-- 成功フラグ設定 -->
+                    <g class="node" data-step="16">
+                        <rect class="node-shape" x="210" y="1770" width="180" height="50" fill="#569CD6" />
+                        <text class="node-text" x="300" y="1795" text-anchor="middle" fill="#FFFFFF" font-size="12">$success = true</text>
+                        <text class="node-text" x="300" y="1810" text-anchor="middle" fill="#FFFFFF" font-size="11">成功フラグ設定</text>
+                    </g>
+                    <line class="arrow" x1="300" y1="1820" x2="300" y2="1860" />
+                    
+                    <!-- 終了（成功） -->
+                    <g class="node" data-step="end-success">
+                        <rect class="node-shape" x="225" y="1860" width="150" height="50" rx="25" fill="#4EC9B0" />
+                        <text class="node-text" x="300" y="1885" text-anchor="middle" fill="#1E1E1E" font-size="14" font-weight="bold">処理完了</text>
+                    </g>
+                </svg>
+            </div>
+            
+            <div class="code-section">
+                <h2>📄 ソースコード</h2>
+                <div class="code-content"><span class="comment">// 1. POSTリクエストのみ受け付ける</span>
+<span class="keyword">if</span> (<span class="variable">$_SERVER</span>[<span class="string">'REQUEST_METHOD'</span>] === <span class="string">'POST'</span>) {
+
+    <span class="comment">// 2. 入力データの取得とサニタイズ（安全化）</span>
+    <span class="variable">$name</span>    = <span class="function">filter_input</span>(<span class="variable">INPUT_POST</span>, <span class="string">'name'</span>, <span class="variable">FILTER_SANITIZE_SPECIAL_CHARS</span>);
+    <span class="variable">$email</span>   = <span class="function">filter_input</span>(<span class="variable">INPUT_POST</span>, <span class="string">'email'</span>, <span class="variable">FILTER_SANITIZE_EMAIL</span>);
+    <span class="variable">$message</span> = <span class="function">filter_input</span>(<span class="variable">INPUT_POST</span>, <span class="string">'message'</span>, <span class="variable">FILTER_SANITIZE_SPECIAL_CHARS</span>);
+
+    <span class="comment">// 3. バリデーション（入力チェック）</span>
+    <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$name</span>)) {
+        <span class="variable">$errors</span>[<span class="string">'name'</span>] = <span class="string">'お名前を入力してください。'</span>;
+    }
+
+    <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$email</span>)) {
+        <span class="variable">$errors</span>[<span class="string">'email'</span>] = <span class="string">'メールアドレスを入力してください。'</span>;
+    } <span class="keyword">elseif</span> (!<span class="function">filter_var</span>(<span class="variable">$email</span>, <span class="variable">FILTER_VALIDATE_EMAIL</span>)) {
+        <span class="variable">$errors</span>[<span class="string">'email'</span>] = <span class="string">'正しいメールアドレスの形式で入力してください。'</span>;
+    }
+
+    <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$message</span>)) {
+        <span class="variable">$errors</span>[<span class="string">'message'</span>] = <span class="string">'お問い合わせ内容を入力してください。'</span>;
+    } <span class="keyword">elseif</span> (<span class="function">mb_strlen</span>(<span class="variable">$message</span>) > <span class="number">500</span>) {
+        <span class="variable">$errors</span>[<span class="string">'message'</span>] = <span class="string">'お問い合わせ内容は500文字以内で入力してください。'</span>;
+    }
+
+    <span class="comment">// 4. エラーがなければ保存処理</span>
+    <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$errors</span>)) {
+        <span class="variable">$timestamp</span> = <span class="function">date</span>(<span class="string">'Y-m-d H:i:s'</span>);
+        <span class="variable">$ip_address</span> = <span class="variable">$_SERVER</span>[<span class="string">'REMOTE_ADDR'</span>];
+
+        <span class="comment">// 保存するデータ配列</span>
+        <span class="variable">$data</span> = [<span class="variable">$timestamp</span>, <span class="variable">$name</span>, <span class="variable">$email</span>, <span class="variable">$message</span>, <span class="variable">$ip_address</span>];
+
+        <span class="comment">// ファイルを追記モードで開く</span>
+        <span class="variable">$file</span> = <span class="function">fopen</span>(<span class="variable">DATA_FILE</span>, <span class="string">'a'</span>);
+
+        <span class="comment">// ログファイルに処理状況を記録</span>
+        <span class="variable">$log_message</span> = <span class="string">"Contact form submission - Name: </span>{<span class="variable">$name</span>}<span class="string">, Email: </span>{<span class="variable">$email</span>}<span class="string">, IP: </span>{<span class="variable">$ip_address</span>}<span class="string">, Time: </span>{<span class="variable">$timestamp</span>}<span class="string">"</span>;
+        <span class="function">error_log</span>(<span class="variable">$log_message</span>, <span class="number">3</span>, <span class="string">'contact_form.log'</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$file</span>) {
+            <span class="comment">// 文字化け対策（Excelで見れるようにShift-JISに変換する場合が多い）</span>
+            <span class="function">mb_convert_variables</span>(<span class="string">'SJIS-win'</span>, <span class="string">'UTF-8'</span>, <span class="variable">$data</span>);
+            
+            <span class="comment">// CSV形式で書き込み</span>
+            <span class="function">fputcsv</span>(<span class="variable">$file</span>, <span class="variable">$data</span>);
+            <span class="function">fclose</span>(<span class="variable">$file</span>);
+            <span class="variable">$success</span> = <span class="keyword">true</span>;
+        } <span class="keyword">else</span> {
+            <span class="variable">$errors</span>[<span class="string">'system'</span>] = <span class="string">'システムエラーが発生しました。時間を置いて再度お試しください。'</span>;
+        }
+    }
+}</div>
+            </div>
+        </div>
+        
+        <div class="explanation-section">
+            <h2>📖 処理フローの詳細説明</h2>
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-title">リクエストメソッドチェック</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> $_SERVER['REQUEST_METHOD']がPOSTかどうかを確認します。<br>
+                        <strong>目的:</strong> フォームからの正規の送信のみを受け付け、不正なアクセスを防ぎます。<br>
+                        <strong>分岐:</strong> POSTでない場合は処理を終了し、POSTの場合のみ次のステップに進みます。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">入力データの取得とサニタイズ</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> filter_input()を使用して、name、email、messageを取得し、同時にサニタイズ（無害化）します。<br>
+                        <strong>使用フィルター:</strong>
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            <li>FILTER_SANITIZE_SPECIAL_CHARS: HTMLタグやスクリプトを無害化</li>
+                            <li>FILTER_SANITIZE_EMAIL: メールアドレスとして不正な文字を除去</li>
+                        </ul>
+                        <strong>セキュリティ:</strong> XSS攻撃やインジェクション攻撃を防ぐための重要な処理です。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">名前のバリデーション</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> $nameが空でないかをチェックします。<br>
+                        <strong>エラー時:</strong> $errors['name']にエラーメッセージを設定します。<br>
+                        <strong>目的:</strong> 必須項目の入力を保証します。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">メールアドレスの空チェック</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> $emailが空でないかをチェックします。<br>
+                        <strong>エラー時:</strong> $errors['email']に「入力してください」メッセージを設定します。<br>
+                        <strong>注意:</strong> 空の場合は形式チェックをスキップします（elseif構造）。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">メールアドレスの形式チェック</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> filter_var()とFILTER_VALIDATE_EMAILを使用して、正しいメールアドレス形式かを検証します。<br>
+                        <strong>エラー時:</strong> $errors['email']に「正しい形式で入力してください」メッセージを設定します。<br>
+                        <strong>検証項目:</strong> @の有無、ドメインの妥当性など。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">お問い合わせ内容の空チェック</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> $messageが空でないかをチェックします。<br>
+                        <strong>エラー時:</strong> $errors['message']に「入力してください」メッセージを設定します。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">お問い合わせ内容の文字数チェック</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> mb_strlen()で$messageの文字数を計測し、500文字以内かをチェックします。<br>
+                        <strong>エラー時:</strong> $errors['message']に「500文字以内で入力してください」メッセージを設定します。<br>
+                        <strong>注意:</strong> mb_strlen()はマルチバイト文字（日本語など）を正しくカウントします。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">エラーの総合判定</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> $errors配列が空かどうかをチェックします。<br>
+                        <strong>エラーあり:</strong> 処理を終了し、エラーメッセージを表示します（画面に戻る）。<br>
+                        <strong>エラーなし:</strong> データ保存処理に進みます。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">データ準備</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> 保存に必要な追加情報を取得します。<br>
+                        <strong>取得データ:</strong>
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            <li>$timestamp: 現在の日時（Y-m-d H:i:s形式）</li>
+                            <li>$ip_address: アクセス元のIPアドレス（$_SERVER['REMOTE_ADDR']）</li>
+                        </ul>
+                        <strong>データ配列作成:</strong> $data = [$timestamp, $name, $email, $message, $ip_address]
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">ファイルオープン</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> fopen()でDATA_FILEを追記モード('a')で開きます。<br>
+                        <strong>追記モード:</strong> 既存の内容を保持し、末尾に新しいデータを追加します。<br>
+                        <strong>返り値:</strong> ファイルハンドル（成功時）またはfalse（失敗時）を$fileに格納します。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">ログ記録</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> error_log()で処理状況をログファイルに記録します。<br>
+                        <strong>ログ内容:</strong> 送信者名、メールアドレス、IPアドレス、タイムスタンプ<br>
+                        <strong>出力先:</strong> contact_form.log（第3引数に3を指定してファイル出力）<br>
+                        <strong>目的:</strong> 監査証跡として、後からアクセス履歴を確認できるようにします。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">ファイルオープン成功判定</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> $fileがtrueかどうか（ファイルオープンに成功したか）を判定します。<br>
+                        <strong>失敗時:</strong> $errors['system']にシステムエラーメッセージを設定し、処理を終了します。<br>
+                        <strong>成功時:</strong> CSV書き込み処理に進みます。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">文字コード変換</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> mb_convert_variables()で$data配列の内容をUTF-8からShift-JIS（Windows版）に変換します。<br>
+                        <strong>目的:</strong> Excelで開いた際に文字化けしないようにします。<br>
+                        <strong>注意:</strong> この処理により日本語が正しく表示されます。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">CSV書き込み</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> fputcsv()で$data配列をCSV形式に変換し、ファイルに書き込みます。<br>
+                        <strong>CSV形式:</strong> カンマ区切り、必要に応じてダブルクォートで囲む標準的な形式です。<br>
+                        <strong>書き込み内容:</strong> [タイムスタンプ, 名前, メールアドレス, メッセージ, IPアドレス]
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">ファイルクローズ</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> fclose()でファイルハンドルを閉じます。<br>
+                        <strong>目的:</strong> リソースを解放し、データを確実にディスクに書き込みます。<br>
+                        <strong>重要性:</strong> ファイルを閉じないとデータが失われる可能性があります。
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">成功フラグ設定</div>
+                    <div class="step-description">
+                        <strong>処理内容:</strong> $successにtrueを設定します。<br>
+                        <strong>目的:</strong> 画面表示側で「送信成功」メッセージを表示するためのフラグです。<br>
+                        <strong>結果:</strong> すべての処理が正常に完了し、お問い合わせが受け付けられました。
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+    
+    <script>
+        const nodeDetails = {
+            '0': {
+                title: '開始',
+                description: 'お問い合わせフォームの処理を開始します。ユーザーがフォームを送信すると、このPHPスクリプトが実行されます。'
+            },
+            '1': {
+                title: 'リクエストメソッドのチェック',
+                description: '$_SERVER[\'REQUEST_METHOD\']を確認し、POSTリクエストかどうかを判定します。<br><br><strong>YES:</strong> POSTリクエスト → 処理を続行<br><strong>NO:</strong> GET等のリクエスト → 処理を行わず終了<br><br>これにより、直接URLにアクセスした場合などの不正な処理を防ぎます。'
+            },
+            '2': {
+                title: '入力データの取得とサニタイズ',
+                description: 'filter_input()関数を使用して、POSTデータを安全に取得します。<br><br><strong>取得項目:</strong><br>• name: FILTER_SANITIZE_SPECIAL_CHARSで特殊文字をエスケープ<br>• email: FILTER_SANITIZE_EMAILでメール用に不正な文字を除去<br>• message: FILTER_SANITIZE_SPECIAL_CHARSで特殊文字をエスケープ<br><br>これにより、XSS攻撃などのセキュリティリスクを低減します。'
+            },
+            '3': {
+                title: '名前の空チェック',
+                description: 'empty()関数で$nameが空かどうかをチェックします。<br><br><strong>YES（空）:</strong> $errors[\'name\']にエラーメッセージを設定<br><strong>NO（入力あり）:</strong> 次のバリデーションへ進む<br><br>必須項目の入力を保証するための基本的なチェックです。'
+            },
+            '3a': {
+                title: '名前エラーの設定',
+                description: '$errors[\'name\'] = \'お名前を入力してください。\'<br><br>エラー配列に名前欄のエラーメッセージを追加します。このメッセージは画面に表示され、ユーザーに入力を促します。'
+            },
+            '4': {
+                title: 'メールアドレスの空チェック',
+                description: 'empty()関数で$emailが空かどうかをチェックします。<br><br><strong>YES（空）:</strong> エラーメッセージを設定し、形式チェックはスキップ<br><strong>NO（入力あり）:</strong> メールアドレス形式のチェックへ進む'
+            },
+            '4a': {
+                title: 'メールアドレス空エラーの設定',
+                description: '$errors[\'email\'] = \'メールアドレスを入力してください。\'<br><br>メールアドレスが未入力の場合のエラーメッセージを設定します。'
+            },
+            '5': {
+                title: 'メールアドレスの形式チェック',
+                description: 'filter_var($email, FILTER_VALIDATE_EMAIL)で正しいメールアドレス形式かを検証します。<br><br><strong>YES（正しい形式）:</strong> 次のバリデーションへ<br><strong>NO（不正な形式）:</strong> 形式エラーを設定<br><br>@の有無、ドメインの妥当性などを自動的にチェックします。'
+            },
+            '5a': {
+                title: 'メールアドレス形式エラーの設定',
+                description: '$errors[\'email\'] = \'正しいメールアドレスの形式で入力してください。\'<br><br>メールアドレスの形式が不正な場合のエラーメッセージを設定します。'
+            },
+            '6': {
+                title: 'お問い合わせ内容の空チェック',
+                description: 'empty()関数で$messageが空かどうかをチェックします。<br><br><strong>YES（空）:</strong> エラーメッセージを設定<br><strong>NO（入力あり）:</strong> 文字数チェックへ進む'
+            },
+            '6a': {
+                title: 'お問い合わせ内容空エラーの設定',
+                description: '$errors[\'message\'] = \'お問い合わせ内容を入力してください。\'<br><br>お問い合わせ内容が未入力の場合のエラーメッセージを設定します。'
+            },
+            '7': {
+                title: 'お問い合わせ内容の文字数チェック',
+                description: 'mb_strlen($message)で文字数を計測し、500文字以内かをチェックします。<br><br><strong>YES（500文字超過）:</strong> エラーメッセージを設定<br><strong>NO（500文字以内）:</strong> バリデーション完了<br><br>mb_strlen()はマルチバイト文字（日本語）を正確にカウントします。'
+            },
+            '7a': {
+                title: 'お問い合わせ内容文字数エラーの設定',
+                description: '$errors[\'message\'] = \'お問い合わせ内容は500文字以内で入力してください。\'<br><br>文字数が上限を超えた場合のエラーメッセージを設定します。'
+            },
+            '8': {
+                title: 'エラーの総合判定',
+                description: 'empty($errors)で$errors配列が空かどうかをチェックします。<br><br><strong>YES（エラーなし）:</strong> データ保存処理へ進む<br><strong>NO（エラーあり）:</strong> 処理を終了し、エラーメッセージを表示<br><br>すべてのバリデーションをパスした場合のみ、データ保存が実行されます。'
+            },
+            '9': {
+                title: 'データ準備',
+                description: '保存に必要なデータを準備します。<br><br><strong>取得・作成するデータ:</strong><br>• $timestamp = date(\'Y-m-d H:i:s\'): 現在日時<br>• $ip_address = $_SERVER[\'REMOTE_ADDR\']: アクセス元IP<br>• $data = [$timestamp, $name, $email, $message, $ip_address]: 保存用配列<br><br>これらの情報をCSVファイルに記録します。'
+            },
+            '10': {
+                title: 'ファイルオープン',
+                description: 'fopen(DATA_FILE, \'a\')でファイルを追記モードで開きます。<br><br><strong>追記モード(\'a\'):</strong><br>• 既存の内容を保持<br>• ファイルの末尾に新しいデータを追加<br>• ファイルが存在しない場合は自動的に作成<br><br>成功した場合はファイルハンドル、失敗した場合はfalseが返されます。'
+            },
+            '11': {
+                title: 'ログ記録',
+                description: 'error_log()でログファイルに処理状況を記録します。<br><br><strong>記録内容:</strong><br>送信者名、メールアドレス、IPアドレス、タイムスタンプ<br><br><strong>ログファイル:</strong> contact_form.log<br><br>後から送信履歴を確認するための監査証跡として機能します。'
+            },
+            '12': {
+                title: 'ファイルオープン成功判定',
+                description: '$fileがtrue（ファイルハンドルが取得できた）かどうかを判定します。<br><br><strong>YES（成功）:</strong> CSV書き込み処理へ進む<br><strong>NO（失敗）:</strong> システムエラーを設定して終了<br><br>ファイルのパーミッションエラーやディスク容量不足などで失敗する可能性があります。'
+            },
+            '12a': {
+                title: 'システムエラーの設定',
+                description: '$errors[\'system\'] = \'システムエラーが発生しました。時間を置いて再度お試しください。\'<br><br>ファイルオープンに失敗した場合のエラーメッセージを設定します。ユーザーには技術的な詳細を見せず、一般的なメッセージを表示します。'
+            },
+            '13': {
+                title: '文字コード変換',
+                description: 'mb_convert_variables(\'SJIS-win\', \'UTF-8\', $data)で文字コードを変換します。<br><br><strong>変換:</strong> UTF-8 → Shift-JIS (Windows版)<br><br><strong>目的:</strong> Excelで開いた際に日本語が文字化けしないようにするため。多くの日本の企業環境ではExcelがShift-JISを期待します。'
+            },
+            '14': {
+                title: 'CSV書き込み',
+                description:
